@@ -1,0 +1,4 @@
+# Environments
+.venv
+.flaskenv
+__pycache__
