@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+}
+
+.main-flex {
+    display: flex;
+    max-width: 1000px;
+    margin: 40px auto;
+    gap: 32px;
+}
+
+.calendar-container {
+    flex: 1;
+    background: #fff;
+    padding: 20px 25px 30px 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+    min-width: 350px;
+}
+
+.scheduler-container {
+    flex: 1.2;
+    background: #fff;
+    padding: 20px 25px 30px 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+    min-width: 350px;
+}
+
+h2 { text-align: center; margin-bottom: 10px; }
+.nav { text-align: center; margin-bottom: 10px; }
+.nav a { margin: 0 10px; text-decoration: none; color: #0074D9; }
+.calendar { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+th, td { width: 14%; text-align: center; padding: 6px; }
+th { background: #f0f0f0; }
+td { background: #fafafa; border-radius: 4px; }
+.today { background: #ffe082 !important; font-weight: bold; }
+td.empty { background: none; }
+.appointment-form label { display: block; margin-top: 10px; }
+.appointment-form input, .appointment-form select, .appointment-form textarea {
+    width: 100%; padding: 6px; margin-top: 2px; border-radius: 4px; border: 1px solid #ccc;
+}
+
+.appointment-form button {
+    margin-top: 15px; padding: 8px 18px; border: none; border-radius: 4px;
+    background: #0074D9; color: #fff; font-weight: bold; cursor: pointer;
+}
+
+.appointment-form .action-row {
+    display: flex; gap: 10px; margin-top: 10px;
+}
+.appointment-form .action-row button {
+    flex: 1;
+}
