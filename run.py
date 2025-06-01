@@ -2,7 +2,7 @@
 
 
 from app import app
-import
+import os
 
 if __name__ == '__main__':
     # Run the Flask application
