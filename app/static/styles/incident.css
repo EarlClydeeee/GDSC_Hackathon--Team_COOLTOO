@@ -87,6 +87,10 @@ body {
     border-left: 5px solid #1e3a8a;
 }
 
+.page-title p{
+    font-style: italic;
+}
+
 .page-title h1 {
     color: #1e3a8a;
     font-size: 1.8rem;
