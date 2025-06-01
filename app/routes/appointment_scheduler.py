@@ -3,6 +3,7 @@ from datetime import datetime, date, timedelta
 from app import app
 import calendar
 
+from ..services import db, cursor
 
 def month_calendar(year, month):
     cal = calendar.Calendar(calendar.SUNDAY)
@@ -14,6 +15,7 @@ def calendar_view():
     today = date.today()
     year = request.args.get("year", default=today.year, type=int)
     month = request.args.get("month", default=today.month, type=int)
+    appt_date = date(year, month, today.day) 
 
     # Handle POST actions
     if request.method == "POST":
@@ -29,10 +31,23 @@ def calendar_view():
         # Add logic here to create, edit, or delete appointments
         if action == "create":
             # Logic to create an appointment
-            '''
-            
-            '''
-            print(f"Creating appointment: Type: {appt_type}, Description: {description}, Affiliation: {affiliation}, Number: {appt_number}, Name: {name}, Contact: {number}, Email: {email}")
+
+            # SQL Query
+            try:
+                query = '''
+                        INSERT INTO appointments (appointment_type, details, affiliation, full_name, contact_number, email, appointment_date)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)
+                        '''
+                # Execute query
+                input = (appt_type, description, affiliation, name, number, email, appt_date)
+                cursor.execute(query, input)
+
+                db.commit()
+                print(f"Creating appointment: Type: {appt_type}, Description: {description}, Affiliation: {affiliation}, Number: {appt_number}, Name: {name}, Contact: {number}, Email: {email}")
+
+            except:
+                print("Error occurred")
+
         
         elif action == "edit":
             # Logic to edit an existing appointment
