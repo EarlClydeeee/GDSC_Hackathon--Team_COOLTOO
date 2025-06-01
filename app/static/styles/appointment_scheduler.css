@@ -159,12 +159,24 @@ td.empty {
 
 .appointment-form .action-row {
     display: flex;
-    gap: 10px;
+    flex-direction: column; 
+    gap: 12px;
     margin-top: 10px;
+    align-items: stretch;
+    transition: flex-direction 0.3s;
+}
+
+.appointment-form .action-row.horizontal {
+    flex-direction: row;      /* Switch to horizontal when class is added */
+    align-items: center;
 }
 
 .appointment-form .action-row button {
     flex: 1;
+    width: 100%;
+}
+.appointment-form .action-row.horizontal button {
+    width: auto;
 }
 
 /* Responsive Design */
