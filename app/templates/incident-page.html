@@ -7,23 +7,26 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/incident.css') }}"> 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> 
 
     <title>{{title}}</title>
 </head>
 <body>
 <body>
+    <!-- Navigation Bar -->
     <div class="header">
         <div class="header-content">
             <div class="gov-logo">
                 <div class="logo-icon">🏛️</div>
-                <div class="gov-title">Government Services Portal</div>
+                <div class="gov-title">S.I.G.A.L.A</div>
             </div>
             <div class="nav-menu">
-                <div class="nav-item active">📝 Complaints</div>
-                <div class="nav-item">📊 Status</div>
-                <div class="nav-item">📋 Forms</div>
-                <div class="nav-item">👤 Profile</div>
+                <a href="#" class="nav-item">Report Incident</a>
+                <a href="#" class="nav-item">Dashboard</a>
+                <a href="#" class="nav-item">Legal Aid</a>
+                <a href="#" class="nav-item">Appointment</a>
             </div>
         </div>
     </div>
@@ -39,7 +42,7 @@
                 <h2 class="section-title">Complaint Details</h2>
                 
                 <div class="info-box">
-                    <div class="info-box-title">📋 Information Required</div>
+                    <div class="info-box-title"><i class="fas fa-info-circle"></i> Information Required</div>
                     <div class="info-box-text">Please provide accurate and complete information to help us process your complaint effectively.</div>
                 </div>
                 
@@ -91,10 +94,10 @@
                     
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary">
-                            💾 Save Draft
+                             <i class="fas fa-save"></i> Save Draft
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            📤 Submit Complaint
+                            <i class="fas fa-paper-plane"></i> Submit Complaint
                         </button>
                     </div>
                 </form>
@@ -104,29 +107,29 @@
                 <h2 class="section-title">Supporting Evidence</h2>
                 
                 <div class="info-box">
-                    <div class="info-box-title">📷 Upload Images</div>
+                    <div class="info-box-title"><i class="fas fa-image"></i> Upload Images</div>
                     <div class="info-box-text">Attach photos, documents, or other evidence to support your complaint.</div>
                 </div>
                 
                 <div class="image-upload-area" onclick="document.getElementById('imageInput').click()">
-                    <div class="upload-icon">📁</div>
+                    <div class="upload-icon"><i class="fas fa-folder-open"></i></div>
                     <div class="upload-text">Click to upload images</div>
                     <div class="upload-hint">or drag and drop files here</div>
                     <div class="upload-hint">Max file size: 10MB per file</div>
                 </div>
                 
                 <input type="file" 
-                       id="imageInput" 
-                       class="file-input" 
-                       multiple 
-                       accept="image/*,.pdf,.doc,.docx"
-                       onchange="handleFileUpload(event)">
+                    id="imageInput" 
+                    class="file-input" 
+                    multiple 
+                    accept="image/*,.pdf,.doc,.docx"
+                    onchange="handleFileUpload(event)">
                 
                 <div id="uploadedImages" class="uploaded-images"></div>
             </div>
         </div>
     </div>
-    
+
     <!-- Footer Section -->
     <footer class="footer">
         <div class="footer-content">
@@ -168,5 +171,9 @@
             <p>&copy; 2025 S.I.G.A.L.A - All rights reserved </p>
         </div>
     </footer>
+    
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='scripts/incident.js') }}"></script>
+
 </body>
 </html>
