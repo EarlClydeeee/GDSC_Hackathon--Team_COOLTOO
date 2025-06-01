@@ -4,66 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    
 </head>
-<body class="bg-white min-h-screen">
+<body>
     <!-- Navigation Bar -->
-    <nav class="py-4 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center">
-                <a href="#" class="text-blue-600 font-bold text-xl tracking-wide">S.I.G.A.L.A</a>
-                <div class="flex items-center space-x-10">
-                    <a href="#" class="text-gray-700 hover:text-gray-900">Report Incident</a>
-                    <a href="#" class="text-gray-700 hover:text-gray-900">Dashboard</a>
-                    <a href="#" class="text-gray-700 hover:text-gray-900">Legal Aid</a>
-                    <a href="#" class="text-gray-700 hover:text-gray-900">Appointment Scheduler</a>
-                </div>
+    <div class="header">
+        <div class="header-content">
+            <div class="gov-logo">
+                <div class="logo-icon">🏛️</div>
+                <div class="gov-title">S.I.G.A.L.A</div>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-item">Report Incident</a>
+                <a href="#" class="nav-item">Dashboard</a>
+                <a href="#" class="nav-item">Legal Aid</a>
+                <a href="#" class="nav-item">Appointment</a>
             </div>
         </div>
-    </nav>
+    </div>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-6 py-20">
+    <div class="container">
         <!-- Welcome Section -->
-        <div class="text-center mb-16">
-            <h1 class="text-[3.5rem] leading-tight font-bold mb-6">
-                Welcome to<br>
-                <span class="text-blue-600 tracking-wide">S.I.G.A.L.A</span>
-            </h1>
-            <p class="text-gray-600 text-lg max-w-3xl mx-auto leading-relaxed">
+        <div class="welcome-section">
+            <h1>Welcome to<br><span class="highlight">S.I.G.A.L.A</span></h1>
+            <p class="welcome-text">
                 Smart Integrated Geo-Alert and Legal Assistance - Empowering citizens, 
                 speeding up justice, and strengthening trust in institutions.
             </p>
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex justify-center space-x-4 mb-20">
-            <a href="#" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white text-base font-medium rounded-lg hover:bg-blue-700 transition-colors">
+        <div class="action-buttons">
+            <a href="#" class="btn btn-primary">
                 Report Incident
             </a>
-            <a href="#" class="inline-flex items-center px-8 py-3 bg-white text-blue-600 text-base font-medium rounded-lg border border-blue-200 hover:border-blue-300 transition-colors">
+            <a href="#" class="btn btn-secondary">
                 View Dashboard
             </a>
         </div>
 
         <!-- Announcement Section -->
-        <div class="border border-gray-200 rounded-lg p-6 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-900">Announcement</h2>
+        <div class="form-section">
+            <div class="section-title">Announcements</div>
+            <div class="announcement-content">
+                <!-- Add your announcement content here -->
+            </div>
         </div>
 
         <!-- Consult Section -->
-        <div class="border border-gray-200 rounded-lg p-6">
-            <h2 class="text-3xl font-bold text-gray-900">Consult the barangay AI</h2>
-            <p class="mt-4 text-gray-600">{{message}}</p>
+        <div class="form-section">
+            <div class="section-title">Consult the Barangay AI</div>
+            <p class="info-text">{{message}}</p>
+            <div class="quick-actions">
+                <a href="/chatbot" class="btn btn-primary">Start Consultation</a>
+            </div>
         </div>
-    </main>
+    </div>
 </body>
 </html>
