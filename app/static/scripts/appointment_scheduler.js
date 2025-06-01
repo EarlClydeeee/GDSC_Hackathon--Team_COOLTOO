@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const cancelBtn = document.getElementById('cancelBtn');
     const descriptionLabel = document.getElementById('descriptionLabel');
     const descriptionField = document.getElementById('description');
+    const actionRow = document.querySelector('.appointment-form .action-row');
 
     let currentAction = null; // Track which action is currently selected
 
@@ -34,12 +35,16 @@ document.addEventListener("DOMContentLoaded", function () {
             descriptionLabel.style.display = 'none';
             descriptionField.style.display = 'none';
         }
+        // Switch buttons to horizontal
+        if (actionRow) actionRow.classList.add('horizontal');
     }
 
     // Hide the form fields and reset the form
     function hideForm() {
         formFields.style.display = 'none';
         apptForm.reset();
+        // Switch buttons back to vertical
+        if (actionRow) actionRow.classList.remove('horizontal');
     }
 
     // Show form for create action
@@ -60,11 +65,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // When confirm is clicked, set the action and submit the form
     confirmBtn.addEventListener('click', function () {
-    document.getElementById('formAction').value = currentAction; // Set the action
-    apptForm.submit(); // Submit the form
+        document.getElementById('formAction').value = currentAction; // Set the action
+        apptForm.submit(); // Submit the form
     });
 
-    // When cancel is clicked, hide and reset the form
+    // When cancel is clicked, hide and reset the form, and revert buttons to vertical
     cancelBtn.addEventListener('click', function () {
         hideForm();
     });
@@ -75,4 +80,25 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
         }
     });
+});
+
+// Toggle the buttons on Appointment Scheduler section
+document.addEventListener('DOMContentLoaded', function() {
+    const actionRow = document.querySelector('.appointment-form .action-row');
+    if (!actionRow) return;
+    actionRow.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            actionRow.classList.add('horizontal');
+        });
+    });
+});
+
+// When cancel is clicked, hide and reset the form, and revert buttons to vertical
+cancelBtn.addEventListener('click', function () {
+    hideForm();
+    // Remove horizontal class to stack buttons vertically again
+    const actionRow = document.querySelector('.appointment-form .action-row');
+    if (actionRow) {
+        actionRow.classList.remove('horizontal');
+    }
 });

@@ -3,105 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ month_name }} {{ year }} - Scheduler App</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/appointment_scheduler.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
-    <div class="main-flex">
-        <!-- Calendar Section -->
-        <div class="calendar-container">
-            <h2>{{ month_name }} {{ year }}</h2>
-            <div class="nav">
-                <a href="/appointment_scheduler?year={{ prev_year }}&month={{ prev_month }}">&#8592; Previous</a>
-                <a href="/appointment_scheduler?year={{ next_year }}&month={{ next_month }}">Next &#8594;</a>
+    <!-- Navigation Bar -->
+    <div class="header">
+        <div class="header-content">
+            <div class="gov-logo">
+                <div class="logo-icon">🏛️</div>
+                <div class="gov-title">S.I.G.A.L.A</div>
             </div>
-            <table class="calendar">
-                <thead>
-                    <tr>
-                        {% for wd in weekdays %}
-                        <th>{{ wd }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for week in month_days %}
-                    <tr>
-                        {% for d in week %}
-                            {% if d == 0 %}
-                                <td class="empty"></td>
-                            {% elif d == today.day and month == today.month and year == today.year %}
-                                <td class="today">
-                                    <form method="post" action="/appointment_scheduler" style="display:inline;">
-                                        <input type="hidden" name="year" value="{{ year }}">
-                                        <input type="hidden" name="month" value="{{ month }}">
-                                        <input type="hidden" name="day" value="{{ d }}">
-                                        <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
-                                    </form>
-                                </td>
-                            {% else %}
-                                <td>
-                                    <form method="post" action="/appointment_scheduler" style="display:inline;">
-                                        <input type="hidden" name="year" value="{{ year }}">
-                                        <input type="hidden" name="month" value="{{ month }}">
-                                        <input type="hidden" name="day" value="{{ d }}">
-                                        <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
-                                    </form>
-                                </td>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Appointment Scheduler Section -->
-        <div class="scheduler-container">
-            <h2>Appointment Scheduler</h2>
-            <form class="appointment-form" method="post" action="/appointment_scheduler" id="apptForm">
-                <div class="action-row">
-                    <button type="button" name="action" value="create" id="createBtn">Create</button>
-                    <button type="button" name="action" value="edit" id="editBtn">Edit</button>
-                    <button type="button" name="action" value="delete" id="deleteBtn">Delete</button>
-                </div>
-                <input type="hidden" id="formAction" name="action" value="">
-                <div id="formFields" style="display:none;">
-                    <label for="appt_type">Type of Appointment</label>
-                    <select id="appt_type" name="appt_type" required>
-                        <option value="">--Select--</option>
-                        <option>Request for Documents</option>
-                        <option>Request for Aid/Assistance</option>
-                        <option>Partnership with NGOs/Institutions</option>
-                        <option>Other Concerns</option>
-                    </select>
-
-                    <label for="description" id="descriptionLabel">Description</label>
-                    <textarea id="description" name="description" rows="2"></textarea>
-
-                    <label for="affiliation">Affiliation (for Partnership)</label>
-                    <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO">
-
-                    <div id="apptNumberGroup" style="display:none;">
-                        <label for="appt_number">Appointment Number (for Edit/Delete)</label>
-                        <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number">
-                    </div>
-
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" required>
-
-                    <label for="number">Contact Number</label>
-                    <input type="text" id="number" name="number" required>
-
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-
-                    <div class="form-actions">
-                        <button type="button" id="confirmBtn">Confirm</button>
-                        <button type="button" id="cancelBtn">Cancel</button>
-                    </div>
-                </div>
-            </form>
+            <div class="nav-menu">
+                <a href="#" class="nav-item">Report Incident</a>
+                <a href="#" class="nav-item">Dashboard</a>
+                <a href="#" class="nav-item">Legal Aid</a>
+                <a href="#" class="nav-item">Appointment</a>
+            </div>
         </div>
     </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Title -->
+        <div class="page-title">
+            <h1>Appointment Scheduler</h1>
+            <p>Manage your appointments with ease. Select a date to view or create appointments.</p>
+        </div>
+
+        <div class="main-flex">
+            <!-- Calendar Section -->
+            <div class="calendar-container">
+                <h2>{{ month_name }} {{ year }}</h2>
+                <div class="nav">
+                    <a href="/appointment_scheduler?year={{ prev_year }}&month={{ prev_month }}">&#8592; Previous</a>
+                    <a href="/appointment_scheduler?year={{ next_year }}&month={{ next_month }}">Next &#8594;</a>
+                </div>
+                <table class="calendar">
+                    <thead>
+                        <tr>
+                            {% for wd in weekdays %}
+                            <th>{{ wd }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in month_days %}
+                        <tr>
+                            {% for d in week %}
+                                {% if d == 0 %}
+                                    <td class="empty"></td>
+                                {% elif d == today.day and month == today.month and year == today.year %}
+                                    <td class="today">
+                                        <form method="post" action="/appointment_scheduler" style="display:inline;">
+                                            <input type="hidden" name="year" value="{{ year }}">
+                                            <input type="hidden" name="month" value="{{ month }}">
+                                            <input type="hidden" name="day" value="{{ d }}">
+                                            <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
+                                        </form>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <form method="post" action="/appointment_scheduler" style="display:inline;">
+                                            <input type="hidden" name="year" value="{{ year }}">
+                                            <input type="hidden" name="month" value="{{ month }}">
+                                            <input type="hidden" name="day" value="{{ d }}">
+                                            <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
+                                        </form>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Appointment Scheduler Section -->
+            <div class="scheduler-container">
+                <h2>Appointment Scheduler</h2>
+                <form class="appointment-form" method="post" action="/appointment_scheduler" id="apptForm">
+                    <div class="action-row">
+                        <button type="button" name="action" value="create" id="createBtn">
+                            <i class="fas fa-plus"></i> Create
+                        </button>
+                        <button type="button" name="action" value="edit" id="editBtn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button type="button" name="action" value="delete" id="deleteBtn">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                    <input type="hidden" id="formAction" name="action" value="">
+                    <div id="formFields" style="display:none;">
+                        <label for="appt_type">Type of Appointment</label>
+                        <select id="appt_type" name="appt_type" required>
+                            <option value="">--Select--</option>
+                            <option>Request for Documents</option>
+                            <option>Request for Aid/Assistance</option>
+                            <option>Partnership with NGOs/Institutions</option>
+                            <option>Other Concerns</option>
+                        </select>
+
+                        <label for="description" id="descriptionLabel">Description</label>
+                        <textarea id="description" name="description" rows="2"></textarea>
+
+                        <label for="affiliation">Affiliation (for Partnership)</label>
+                        <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO">
+
+                        <div id="apptNumberGroup" style="display:none;">
+                            <label for="appt_number">Appointment Number (for Edit/Delete)</label>
+                            <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number">
+                        </div>
+
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+
+                        <label for="number">Contact Number</label>
+                        <input type="text" id="number" name="number" required>
+
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+
+                        <div class="form-actions">
+                            <button type="button" id="confirmBtn">
+                                <i class="fas fa-check"></i> Confirm
+                            </button>
+                            <button type="button" id="cancelBtn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About S.I.G.A.L.A</h3>
+                <p>Smart Integrated Geo-Alert and Legal Assistance - A digital platform enhancing barangay services and citizen engagement.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Emergency Contacts</a></li>
+                    <li><a href="#">Legal Resources</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <ul>
+                    <li>Barangay Hall Address</li>
+                    <li>Emergency: 911</li>
+                    <li>Email: support@sigala.gov.ph</li>
+                    <li>Office Hours: 8:00 AM - 5:00 PM</li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">Facebook</a>
+                    <a href="#" class="social-link">Twitter</a>
+                    <a href="#" class="social-link">Instagram</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 S.I.G.A.L.A - All rights reserved </p>
+        </div>
+    </footer>
+
     <script src="{{ url_for('static', filename='scripts/appointment_scheduler.js') }}"></script>
 </body>
 </html>
