@@ -3,23 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Barangay Legal Chatbot</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 2em; }
-        #chat-box { border: 1px solid #ccc; padding: 1em; height: 300px; overflow-y: auto; margin-bottom: 1em; }
-        .user { color: #0074D9; margin-bottom: 0.5em; }
-        .bot { color: #2ECC40; margin-bottom: 1em; }
-        form { display: flex; gap: 0.5em; }
-        input[type="text"] { flex: 1; padding: 0.5em; }
-        button { padding: 0.5em 1em; }
-    </style>
+
+    <link rel="stylesheet" href="../static/styles/incident.css">
+    <link rel="stylesheet" href="../static/styles/ai-chatbot.css">
+
+
 </head>
 <body>
-    <h2>Barangay Legal Chatbot</h2>
-    <div id="chat-box"></div>
-    <form id="chat-form" autocomplete="off">
-        <input type="text" id="question" placeholder="Type your question..." required />
-        <button type="submit">Send</button>
-    </form>
+    <div class="header">
+        <div class="header-content">
+            <div class="gov-logo">
+                <div class="logo-icon">🏛️</div>
+                <div class="gov-title">Barangay Services Portal</div>
+            </div>
+            <div class="nav-menu">
+                <div class="nav-item">📝 Complaints</div>
+                <div class="nav-item">📊 Status</div>
+                <div class="nav-item active">🤖 Legal Chatbot</div>
+                <div class="nav-item">👤 Profile</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Section -->
+    <div class="container">
+        <div class="page-title">
+            <h1>Barangay Legal Chatbot</h1>
+            <p>Get instant answers to your legal questions. Our AI assistant is trained on barangay laws and procedures.</p>
+            <p> Note: Please note that AI responses may not always be accurate or up-to-date and should not replace professional legal advice.</p>
+        </div>
+        
+        <div class="chat-container">
+            <div class="info-box">
+                <div class="info-box-title">📋 How to Use</div>
+                <div class="info-box-text">Ask questions about barangay laws, procedures, or legal matters. Be specific for better answers.</div>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="quick-actions-title">Quick Questions:</div>
+                <div class="quick-buttons">
+                    <button class="quick-btn" onclick="askQuickQuestion('What are the requirements for filing a complaint?')">Filing Requirements</button>
+                    <button class="quick-btn" onclick="askQuickQuestion('What is the process for barangay mediation?')">Mediation Process</button>
+                    <button class="quick-btn" onclick="askQuickQuestion('What are barangay official duties?')">Official Duties</button>
+                    <button class="quick-btn" onclick="askQuickQuestion('How to report noise complaints?')">Noise Complaints</button>
+                </div>
+            </div>
+            
+            <div id="chat-box"></div>
+            <div class="typing-indicator" id="typing-indicator"></div>
+            
+            <form id="chat-form" autocomplete="off">
+                <input type="text" id="question" placeholder="Type your legal question here..." required />
+                <button type="submit">
+                    📤 Send
+                </button>
+            </form>
+        </div>
+    </div>
     <script>
         const chatBox = document.getElementById('chat-box');
         const chatForm = document.getElementById('chat-form');

@@ -1,0 +1,383 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+.header {
+    background: #1e3a8a;
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gov-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.gov-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-item {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.nav-item.active {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.4);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.page-title {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+    border-left: 5px solid #1e3a8a;
+}
+
+.page-title h1 {
+    color: #1e3a8a;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.page-title p {
+    color: #666;
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.page-title p #note{
+    font-size: 1rem;
+    font-style: italic;
+}
+
+.chat-container {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.info-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.info-box-title {
+    color: #1e40af;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.info-box-text {
+    color: #1e40af;
+    font-size: 0.9rem;
+}
+
+#chat-box {
+    background: #f9fafb;
+    padding: 25px;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    height: 500px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #1e3a8a #f0f4ff;
+    position: relative;
+}
+
+#chat-box:empty::before {
+    content: "💬 Welcome to Barangay Legal Chatbot! Ask me any legal questions and I'll help you find answers.";
+    color: #6b7280;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+.message {
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    max-width: 80%;
+    font-size: 1rem;
+    line-height: 1.5;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+    word-wrap: break-word;
+}
+
+.user {
+    background: #1e3a8a;
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 2px;
+    box-shadow: 0 2px 5px rgba(30, 58, 138, 0.2);
+}
+
+.user::before {
+    content: "👤 You: ";
+    font-weight: 600;
+}
+
+.bot {
+    background: #f0f4ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+    border-bottom-left-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.bot::before {
+    content: "🤖 Legal Assistant: ";
+    font-weight: 600;
+    color: #1e40af;
+}
+
+#chat-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 15px;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+}
+
+#question {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: #fff;
+}
+
+#question:focus {
+    outline: none;
+    border-color: #1e3a8a;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+#chat-form button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #1e3a8a;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#chat-form button:hover {
+    background: #1e40af;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+#chat-form button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.typing-indicator {
+    display: none;
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    max-width: 80%;
+    background: #f0f4ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+    border-bottom-left-radius: 2px;
+    animation: pulse 1.5s infinite;
+}
+
+.typing-indicator::before {
+    content: "🤖 Legal Assistant is typing";
+    font-style: italic;
+}
+
+.typing-indicator::after {
+    content: "...";
+    animation: dots 1.5s infinite;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes dots {
+    0%, 33% { content: "..."; }
+    34%, 66% { content: ".."; }
+    67%, 100% { content: "."; }
+}
+
+/* Scrollbar Styling */
+#chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-box::-webkit-scrollbar-track {
+    background: #f0f4ff;
+    border-radius: 4px;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+    background: #1e3a8a;
+    border-radius: 4px;
+}
+
+#chat-box::-webkit-scrollbar-thumb:hover {
+    background: #1e40af;
+}
+
+/* Quick Actions */
+.quick-actions {
+    margin-bottom: 20px;
+}
+
+.quick-actions-title {
+    color: #1e3a8a;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.quick-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.quick-btn {
+    padding: 8px 15px;
+    background: rgba(30, 58, 138, 0.1);
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.quick-btn:hover {
+    background: #1e3a8a;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    #chat-box {
+        height: 400px;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+    
+    #chat-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .quick-buttons {
+        justify-content: center;
+    }
+}
