@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Barangay Legal Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        #chat-box { border: 1px solid #ccc; padding: 1em; height: 300px; overflow-y: auto; margin-bottom: 1em; }
+        .user { color: #0074D9; margin-bottom: 0.5em; }
+        .bot { color: #2ECC40; margin-bottom: 1em; }
+        form { display: flex; gap: 0.5em; }
+        input[type="text"] { flex: 1; padding: 0.5em; }
+        button { padding: 0.5em 1em; }
+    </style>
+</head>
+<body>
+    <h2>Barangay Legal Chatbot</h2>
+    <div id="chat-box"></div>
+    <form id="chat-form" autocomplete="off">
+        <input type="text" id="question" placeholder="Type your question..." required />
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const questionInput = document.getElementById('question');
+        let conversation = [];
+
+        function renderConversation() {
+            chatBox.innerHTML = '';
+            conversation.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = msg.role;
+                div.textContent = (msg.role === 'user' ? 'You: ' : 'Bot: ') + msg.content;
+                chatBox.appendChild(div);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const question = questionInput.value.trim();
+            if (!question) return;
+            conversation.push({ role: 'user', content: question });
+            renderConversation();
+            questionInput.value = '';
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+                const data = await response.json();
+                if (data.answer) {
+                    conversation.push({ role: 'bot', content: data.answer });
+                } else if (data.error) {
+                    conversation.push({ role: 'bot', content: 'Error: ' + data.error });
+                }
+                renderConversation();
+            } catch (err) {
+                conversation.push({ role: 'bot', content: 'Error: Could not reach server.' });
+                renderConversation();
+            }
+        });
+    </script>
+</body>
+</html>
