@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/appointment_scheduler.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
 <body>
@@ -87,9 +88,15 @@
                 <h2>Appointment Scheduler</h2>
                 <form class="appointment-form" method="post" action="/appointment_scheduler" id="apptForm">
                     <div class="action-row">
-                        <button type="button" name="action" value="create" id="createBtn">Create</button>
-                        <button type="button" name="action" value="edit" id="editBtn">Edit</button>
-                        <button type="button" name="action" value="delete" id="deleteBtn">Delete</button>
+                        <button type="button" name="action" value="create" id="createBtn">
+                            <i class="fas fa-plus"></i> Create
+                        </button>
+                        <button type="button" name="action" value="edit" id="editBtn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button type="button" name="action" value="delete" id="deleteBtn">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
                     </div>
                     <input type="hidden" id="formAction" name="action" value="">
                     <div id="formFields" style="display:none;">
@@ -123,8 +130,12 @@
                         <input type="email" id="email" name="email" required>
 
                         <div class="form-actions">
-                            <button type="button" id="confirmBtn">Confirm</button>
-                            <button type="button" id="cancelBtn">Cancel</button>
+                            <button type="button" id="confirmBtn">
+                                <i class="fas fa-check"></i> Confirm
+                            </button>
+                            <button type="button" id="cancelBtn">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
                         </div>
                     </div>
                 </form>
