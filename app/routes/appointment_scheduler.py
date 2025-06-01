@@ -28,11 +28,10 @@ def calendar_view():
         number = request.form.get("number")
         email = request.form.get("email")
 
-        # Add logic here to create, edit, or delete appointments
+        # Logic to create, edit, or delete appointments
         if action == "create":
-            # Logic to create an appointment
 
-            # SQL Query
+            #Logic to create a new appointment
             try:
                 query = '''
                         INSERT INTO appointments (appointment_type, details, affiliation, full_name, contact_number, email, appointment_date)
@@ -51,19 +50,54 @@ def calendar_view():
         
         elif action == "edit":
             # Logic to edit an existing appointment
-            '''
-            
-            '''
-            print(f"Editing appointment: Type: {appt_type}, Description: {description}, Affiliation: {affiliation}, Number: {appt_number}, Name: {name}, Contact: {number}, Email: {email}")
+            try:
+                # Check if an appointment exists with the given number, name, number, and email
+                check_query = '''
+                    SELECT * FROM appointments
+                    WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                '''
+                cursor.execute(check_query, (appt_number, name, number, email))
+                result = cursor.fetchone()
+                if result:
+                    # Update the type, description, and affiliation
+                    update_query = '''
+                        UPDATE appointments
+                        SET appointment_type = %s, details = %s, affiliation = %s
+                        WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                    '''
+                    cursor.execute(update_query, (appt_type, description, affiliation, appt_number, name, number, email))
+                    db.commit()
+                    print(f"Appointment {appt_number} updated for {name}.")
+                else:
+                    print("No matching appointment found to edit.")
+            except Exception as e:
+                print("Error occurred during edit:", e)
         
         elif action == "delete":
-            # Logic to delete an appointment
-            '''
-            
-            '''
-            print(f"Deleting appointment for Name: {name}")
+            # Logic to delete an existing appointment 
+            try:
+                # Check if an appointment exists with the given info
+                check_query = '''
+                    SELECT * FROM appointments
+                    WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                '''
+                cursor.execute(check_query, (appt_number, name, number, email))
+                result = cursor.fetchone()
+                if result:
+                    # Delete the appointment
+                    delete_query = '''
+                        DELETE FROM appointments
+                        WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                    '''
+                    cursor.execute(delete_query, (appt_number, name, number, email))
+                    db.commit()
+                    print(f"Appointment {appt_number} deleted for {name}.")
+                else:
+                    print("No matching appointment found to delete.")
+            except Exception as e:
+                print("Error occurred during delete:", e)
 
-        # Optionally, redirect or render a message
+        # Redirect or render a message
         return render_template("appointment_scheduler.html", message="Appointment action processed.")
 
     # Get previous and next month for navigation
