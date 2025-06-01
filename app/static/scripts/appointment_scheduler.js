@@ -60,9 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // When confirm is clicked, set the action and submit the form
     confirmBtn.addEventListener('click', function () {
-        submitBtn.value = currentAction;
-        submitBtn.name = "action";
-        submitBtn.click();
+    document.getElementById('formAction').value = currentAction; // Set the action
+    apptForm.submit(); // Submit the form
     });
 
     // When cancel is clicked, hide and reset the form
