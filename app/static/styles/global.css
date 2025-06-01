@@ -1,3 +1,8 @@
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+
 /* Header and Navigation */
 .header {
     background: #1e3a8a;
