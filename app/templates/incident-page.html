@@ -46,10 +46,10 @@
                     <div class="info-box-text">Please provide accurate and complete information to help us process your complaint effectively.</div>
                 </div>
                 
-                <form id="complaintForm">
+                <form id="complaintForm" method="POST" action="/incident">
                     <div class="form-group">
                         <label class="form-label" for="incidentType">Incident Type <span class="required">*</span></label>
-                        <select class="form-select" id="incidentType" required>
+                        <select class="form-select" id="incidentType" required name="incidentType">
                             <option value="">Select Type</option>
                             <option value="accident">Accident</option>
                             <option value="emergency">Emergency & Disaster</option>
@@ -63,32 +63,32 @@
                     
                     <div class="form-group">
                         <label class="form-label" for="description">Description <span class="required">*</span></label>
-                        <textarea class="form-textarea" id="description" placeholder="Please provide a detailed description of your complaint..." required></textarea>
+                        <textarea class="form-textarea" id="description" placeholder="Please provide a detailed description of your complaint..." required name="description"></textarea>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="location">Location <span class="required">*</span></label>
-                        <input type="text" class="form-input" id="location" placeholder="Where did this incident occur?" required>
+                        <input type="text" class="form-input" id="location" placeholder="Where did this incident occur?" required name="location">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="dateIncident">Date of Incident</label>
-                        <input type="date" class="form-input" id="dateIncident">
+                        <input type="date" class="form-input" id="dateIncident" name="incidentDate">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="contactName">Your Name <span class="required">*</span></label>
-                        <input type="text" class="form-input" id="contactName" placeholder="Full Name" required>
+                        <input type="text" class="form-input" id="contactName" placeholder="Full Name" required name="fullName">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="contactEmail">Email Address <span class="required">*</span></label>
-                        <input type="email" class="form-input" id="contactEmail" placeholder="your.email@example.com" required>
+                        <input type="email" class="form-input" id="contactEmail" placeholder="your.email@example.com" required name="email">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="contactPhone">Phone Number</label>
-                        <input type="tel" class="form-input" id="contactPhone" placeholder="+63 XXX XXX XXXX">
+                        <input type="tel" class="form-input" id="contactPhone" placeholder="+63 XXX XXX XXXX" name="contactPhone">
                     </div>
                     
                     <div class="form-actions">
