@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ month_name }} {{ year }} - Scheduler App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/appointment_scheduler.css') }}">
+</head>
+
+<body>
+    <div class="main-flex">
+        <!-- Calendar Section -->
+        <div class="calendar-container">
+            <h2>{{ month_name }} {{ year }}</h2>
+            <div class="nav">
+                <a href="/appointment_scheduler?year={{ prev_year }}&month={{ prev_month }}">&#8592; Previous</a>
+                <a href="/appointment_scheduler?year={{ next_year }}&month={{ next_month }}">Next &#8594;</a>
+            </div>
+            <table class="calendar">
+                <thead>
+                    <tr>
+                        {% for wd in weekdays %}
+                        <th>{{ wd }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week in month_days %}
+                    <tr>
+                        {% for d in week %}
+                            {% if d == 0 %}
+                                <td class="empty"></td>
+                            {% elif d == today.day and month == today.month and year == today.year %}
+                                <td class="today">
+                                    <form method="post" action="/appointment_scheduler" style="display:inline;">
+                                        <input type="hidden" name="year" value="{{ year }}">
+                                        <input type="hidden" name="month" value="{{ month }}">
+                                        <input type="hidden" name="day" value="{{ d }}">
+                                        <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
+                                    </form>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <form method="post" action="/appointment_scheduler" style="display:inline;">
+                                        <input type="hidden" name="year" value="{{ year }}">
+                                        <input type="hidden" name="month" value="{{ month }}">
+                                        <input type="hidden" name="day" value="{{ d }}">
+                                        <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
+                                    </form>
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Appointment Scheduler Section -->
+        <div class="scheduler-container">
+            <h2>Appointment Scheduler</h2>
+            <form class="appointment-form" method="post" action="/appointment_scheduler">
+                <div class="action-row">
+                    <button type="submit" name="action" value="create">Create</button>
+                    <button type="submit" name="action" value="edit">Edit</button>
+                    <button type="submit" name="action" value="delete">Delete</button>
+                </div>
+                <label for="appt_type">Type of Appointment</label>
+                <select id="appt_type" name="appt_type" required>
+                    <option value="">--Select--</option>
+                    <option>Request for Documents</option>
+                    <option>Request for Aid/Assistance</option>
+                    <option>Partnership with NGOs/Institutions</option>
+                    <option>Other Concerns</option>
+                </select>
+
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="2"></textarea>
+
+                <label for="affiliation">Affiliation (for Partnership)</label>
+                <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO">
+
+                <label for="appt_number">Appointment Number (for Edit/Delete)</label>
+                <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number">
+
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="number">Contact Number</label>
+                <input type="text" id="number" name="number" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
