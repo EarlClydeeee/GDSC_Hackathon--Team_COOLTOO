@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from datetime import datetime, date, timedelta
+import random
 from app import app
 import calendar
 
@@ -9,6 +10,11 @@ def month_calendar(year, month):
     cal = calendar.Calendar(calendar.SUNDAY)
     month_days = cal.monthdayscalendar(year, month)
     return month_days
+
+def generate_appt_number():
+    year = (str(datetime.today().date()))[2:4]
+    digits = str(random.randint(100000, 999999))
+    return year + digits
 
 @app.route("/appointment_scheduler", methods=["GET", "POST"])
 def calendar_view():
@@ -30,22 +36,31 @@ def calendar_view():
 
         # Logic to create, edit, or delete appointments
         if action == "create":
+            max_retries = 20
+            attempt = 0
+            while attempt < max_retries:
+                appt_id = generate_appt_number()
+                try:
+                    query = '''
+                            INSERT INTO appointments (appointment_id, appointment_type, details, affiliation, full_name, contact_number, email, appointment_date)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                            '''
+                    input = (appt_id, appt_type, description, affiliation, name, number, email, appt_date)
+                    cursor.execute(query, input)
+                    db.commit()
 
-            #Logic to create a new appointment
-            try:
-                query = '''
-                        INSERT INTO appointments (appointment_type, details, affiliation, full_name, contact_number, email, appointment_date)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s)
-                        '''
-                # Execute query
-                input = (appt_type, description, affiliation, name, number, email, appt_date)
-                cursor.execute(query, input)
+                    print(f"Appointment created successfully: {appt_id}")
+                    break  # Success, exit loop
 
-                db.commit()
-                print(f"Creating appointment: Type: {appt_type}, Description: {description}, Affiliation: {affiliation}, Number: {appt_number}, Name: {name}, Contact: {number}, Email: {email}")
-
-            except:
-                print("Error occurred")
+                except Exception as e:
+                    if "Duplicate entry" in str(e).lower():
+                        print(f"Duplicate appointment ID {appt_id}, retrying...")
+                        attempt += 1
+                    else:
+                        print(f"Error: {e}")
+                        break  # Break on other errors
+            else:
+                print("Failed to generate a unique appointment ID after multiple attempts.")
 
         
         elif action == "edit":
