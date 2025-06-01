@@ -89,10 +89,12 @@ uploadArea.addEventListener('drop', (e) => {
     });
 });
 
-// Form submission
-document.getElementById('complaintForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
+
+document.querySelector('.btn-primary').addEventListener('click', function() {
+    localStorage.removeItem('incidentDraft');
+});
+// Save draft functionality
+document.querySelector('.btn-secondary').addEventListener('click', function() {
     // Get form data
     const formData = new FormData();
     formData.append('incidentType', document.getElementById('incidentType').value);
@@ -103,34 +105,21 @@ document.getElementById('complaintForm').addEventListener('submit', function(e) 
     formData.append('contactEmail', document.getElementById('contactEmail').value);
     formData.append('contactPhone', document.getElementById('contactPhone').value);
     
-    // Add uploaded files
-    uploadedFiles.forEach((file, index) => {
-        formData.append(`file_${index}`, file);
-    });
-    
-    // Simulate form submission
-    alert('Complaint submitted successfully! You will receive a confirmation email with your reference number.');
-    
-    // Reset form
-    this.reset();
-    uploadedFiles = [];
-    document.getElementById('uploadedImages').innerHTML = '';
-});
-
-// Save draft functionality
-document.querySelector('.btn-secondary').addEventListener('click', function() {
-    const formData = {
-        incidentType: document.getElementById('incidentType').value,
-        description: document.getElementById('description').value,
-        location: document.getElementById('location').value,
-        dateIncident: document.getElementById('dateIncident').value,
-        contactName: document.getElementById('contactName').value,
-        contactEmail: document.getElementById('contactEmail').value,
-        contactPhone: document.getElementById('contactPhone').value
-    };
-    
     // In a real application, this would save to a server or localStorage
-    alert('Draft saved successfully!');
+    localStorage.setItem('incidentDraft', JSON.stringify(formData));
+    alert('Draft saved in browser!');
+});
+window.addEventListener('DOMContentLoaded', () => {
+    const savedData = JSON.parse(localStorage.getItem('incidentDraft'));
+    if (savedData) {
+        document.getElementById('incidentType').value = savedData.incidentType || "";
+        document.getElementById('description').value = savedData.description || "";
+        document.getElementById('location').value = savedData.location || "";
+        document.getElementById('dateIncident').value = savedData.incidentDate || "";
+        document.getElementById('contactName').value = savedData.fullName || "";
+        document.getElementById('contactEmail').value = savedData.email || "";
+        document.getElementById('contactPhone').value = savedData.contactPhone || "";
+    }
 });
 
 // Handling the image file upload input
