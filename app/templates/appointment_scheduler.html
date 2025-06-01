@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ month_name }} {{ year }} - Scheduler App</title>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/appointment_scheduler.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 <body>
@@ -31,7 +33,7 @@
             <h1>Appointment Scheduler</h1>
             <p>Manage your appointments with ease. Select a date to view or create appointments.</p>
         </div>
-        
+
         <div class="main-flex">
             <!-- Calendar Section -->
             <div class="calendar-container">
