@@ -5,6 +5,7 @@ from flask import render_template, request
 from ..services import db, cursor
 import random
 from datetime import datetime
+from .ai_filter import ai_filter
 
 # Function to generate a unique number for incident reports
 def generate_report_id():
@@ -42,6 +43,7 @@ def incident_page():
         incident_type_str = form.get("incidentType")
         incident_type = map_incident_type_to_id(incident_type_str)
         description = form.get("description")
+        gravity = ai_filter(description)
         location = form.get("location")
         incident_date = form.get("incidentDate")
         full_name = form.get("fullName")
@@ -65,10 +67,10 @@ def incident_page():
 
         try:
             query = '''
-                INSERT INTO incident_reports (unique_report_id, user_id, full_name, email, phone_number, details, incident_type, incident_date, location, report_status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO incident_reports (unique_report_id, user_id, full_name, email, phone_number, details, incident_type, incident_date, location, report_status, gravity)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             '''
-            values = (unique_report_id, user_id, full_name, email, contact_number, description, incident_type, incident_date, location, status)
+            values = (unique_report_id, user_id, full_name, email, contact_number, description, incident_type, incident_date, location, status, gravity)
             print("Attempting to insert:", values)
             cursor.execute(query, values)
             
