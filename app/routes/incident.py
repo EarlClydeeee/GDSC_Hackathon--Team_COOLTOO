@@ -1,10 +1,13 @@
 from app import app
+import os
+from werkzeug.utils import secure_filename
 from flask import render_template, request
 
 from ..services import db, cursor
 
 @app.route('/incident', methods=["POST", "GET"])
 def incident_page():
+    print("Form Submitted!")
     if request.method == "POST":
         print("Form submitted!")
         form = request.form
@@ -17,6 +20,22 @@ def incident_page():
         email = form.get("email")
         contact_number = form.get("contactPhone")
 
+        images = request.files.getlist('images')
+        if not images:
+            print("There are no images")
+
+        incident_types = {
+            "accident": 1,
+            "emergency": 2,
+            "peace": 3,
+            "social": 4,
+            "infra": 5,
+            "behaviour": 6,
+            "governance": 7
+        }
+
+        incident_type = incident_types.get(incident_type)
+
         try:
             query = '''
                     INSERT INTO incident_reports (full_name, email, phone_number, details, incident_type, incident_date, location)
@@ -24,6 +43,19 @@ def incident_page():
                     '''
             values = (full_name, email, contact_number, description, incident_type, incident_date, location)
             cursor.execute(query, values)
+            report_id = cursor.lastrowid
+
+            for image in images:
+                print("uploading image....")
+                if image.filename:
+                    filename = secure_filename(image.filename)
+                    upload_dir = os.path.join(os.getcwd(), 'app', 'uploads')
+                    app.config['UPLOAD_FOLDER'] = upload_dir
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    image.save(filepath)
+
+                    relative_path = os.path.join('uploads', filename)
+                    cursor.execute("INSERT INTO incident_images (report_id, image_path) VALUES (%s, %s)", (report_id, relative_path))
 
             db.commit()
 

@@ -46,7 +46,7 @@
                     <div class="info-box-text">Please provide accurate and complete information to help us process your complaint effectively.</div>
                 </div>
                 
-                <form id="complaintForm" method="POST" action="/incident">
+                <form id="complaintForm" method="POST" action="/incident" enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="form-label" for="incidentType">Incident Type <span class="required">*</span></label>
                         <select class="form-select" id="incidentType" required name="incidentType">
@@ -55,6 +55,7 @@
                             <option value="emergency">Emergency & Disaster</option>
                             <option value="peace">Peace & Order</option>
                             <option value="social">Health & Social Services</option>
+                            <option value="infra">Infrastructure & Utilities</option>
                             <option value="behaviour">Public Behaviour & Community Concern</option>
                             <option value="governance">Governance & Transparency</option>
 
@@ -99,7 +100,7 @@
                             <i class="fas fa-paper-plane"></i> Submit Complaint
                         </button>
                     </div>
-                </form>
+                
             </div>
             
             <div class="image-upload-section">
@@ -121,10 +122,12 @@
                     id="imageInput" 
                     class="file-input" 
                     multiple 
-                    accept="image/*,.pdf,.doc,.docx"
-                    onchange="handleFileUpload(event)">
+                    accept="image/*"
+                    onchange="handleFileUpload(event)"
+                    name="images">
                 
                 <div id="uploadedImages" class="uploaded-images"></div>
+                </form>
             </div>
         </div>
     </div>

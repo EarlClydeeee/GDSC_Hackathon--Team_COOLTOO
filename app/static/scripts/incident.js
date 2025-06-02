@@ -90,7 +90,7 @@ uploadArea.addEventListener('drop', (e) => {
 });
 
 
-document.querySelector('.btn-primary').addEventListener('click', function() {
+document.getElementById('complaintForm').addEventListener('submit', function() {
     localStorage.removeItem('incidentDraft');
 });
 // Save draft functionality
