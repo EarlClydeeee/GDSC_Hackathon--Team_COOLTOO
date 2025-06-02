@@ -11,8 +11,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
@@ -177,6 +179,26 @@
                     <h2 class="text-lg font-medium text-gray-900">Priority Distribution</h2>
                     <div class="mt-4 chart-container">
                         <canvas id="priority-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Chart -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">Status Chart</h2>
+                    <div class="mt-4 chart-container">
+                        <canvas id="resolution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Types -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">Type of Reports</h2>
+                    <div class="mt-4 chart-container">
+                        <canvas id="type-chart"></canvas>
                     </div>
                 </div>
             </div>

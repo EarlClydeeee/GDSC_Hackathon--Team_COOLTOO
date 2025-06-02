@@ -1,9 +1,10 @@
 from app import app
 from flask import render_template
-from app.services import cursor
+from app.services import connect_to_db
 
 @app.route('/reports_list')
 def reports_list():
+    db, cursor = connect_to_db()
     urgent_query = """
         SELECT 
             ir.unique_report_id, ir.report_status, ir.location, ir.incident_date, ir.details,
@@ -26,6 +27,8 @@ def reports_list():
     cursor.execute(common_query)
     common_reports = [dict(zip([col[0] for col in cursor.description], row)) for row in cursor.fetchall()]
 
+    cursor.close()
+    db.close()
     return render_template(
         'reports_list.html',
         title="Incident Reports",
