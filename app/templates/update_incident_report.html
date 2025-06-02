@@ -8,36 +8,12 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .main-flex {
-            display: flex;
-            gap: 32px;
-            max-width: 900px;
-            margin: 40px auto;
-        }
-        .left-panel, .right-panel {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.10);
-            padding: 24px 28px 28px 28px;
-            min-width: 320px;
-            flex: 1;
-        }
-        .right-panel {
-            flex: 1.2;
-        }
-        .form-actions {
-            margin-top: 18px;
-            display: flex;
-            gap: 10px;
-        }
-        .form-actions button {
-            flex: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/update_incident_report.css') }}">
 </head>
 <body>
+    <p>user_role: {{ user_role }}</p>
+    <p>report_status: {{ report.report_status }}</p>
     <div class="main-flex">
         <!-- Left Panel: Search or Update Form -->
         <div class="left-panel">
@@ -50,20 +26,22 @@
                     <input type="text" name="user_id" id="user_id" placeholder="Input your User ID" required>
                     <button type="submit">Search</button>
                 </form>
-            {% else %}
+            {% endif %}
+
+            {% if report %}
                 <h2>Update Report Status</h2>
                 <form method="POST" action="/update_incident_report">
-                    <input type="hidden" name="incident_id" value="{{ report.incident_id }}">
+                    <input type="hidden" name="unique_report_id" value="{{ report.unique_report_id }}">
                     <input type="hidden" name="user_id" value="{{ user_id }}">
                     <div class="form-actions">
-                        {% if user_role == "admin" %}
-                            <button type="submit" name="action" value="processed">Mark as Processed</button>
-                        {% elif user_role == "reporter" %}
-                            <button type="submit" name="action" value="resolved">Mark as Resolved</button>
-                            <button type="submit" name="action" value="unresolved">Mark as Unresolved</button>
-                        {% endif %}
+                        <button type="submit" name="action" value="processed">Mark as Processed</button>
+                        <button type="submit" name="action" value="resolved">Mark as Resolved</button>
+                        <button type="submit" name="action" value="unresolved">Mark as Unresolved</button>
                     </div>
                 </form>
+                {% if message %}
+                    <div class="message">{{ message }}</div>
+                {% endif %}
             {% endif %}
         </div>
 
@@ -72,12 +50,15 @@
             {% if report %}
                 <h2>Incident Report Details</h2>
                 <ul>
-                    <li><strong>ID:</strong> {{ report.incident_id }}</li>
+                    <li><strong>Report ID:</strong> {{ report.unique_report_id }}</li>
                     <li><strong>Type:</strong> {{ report.incident_type }}</li>
-                    <li><strong>Description:</strong> {{ report.description }}</li>
+                    <li><strong>Details:</strong> {{ report.details }}</li>
                     <li><strong>Location:</strong> {{ report.location }}</li>
-                    <li><strong>Date/Time:</strong> {{ report.date_time }}</li>
-                    <li><strong>Status:</strong> {{ report.status }}</li>
+                    <li><strong>Status:</strong> {{ report.report_status }}</li>
+                    <li><strong>User ID:</strong> {{ report.user_id }}</li>
+                    <li><strong>Name:</strong> {{ report.full_name }}</li>
+                    <li><strong>Email:</strong> {{ report.email }}</li>
+                    <li><strong>Phone:</strong> {{ report.phone_number }}</li>
                 </ul>
             {% else %}
                 <h2>No Incident Selected</h2>

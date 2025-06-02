@@ -1,0 +1,33 @@
+.main-flex {
+    display: flex;
+    gap: 32px;
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+.left-panel, .right-panel {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+    padding: 24px 28px 28px 28px;
+    min-width: 320px;
+    flex: 1;
+}
+
+.right-panel {
+    flex: 1.2;
+}
+
+.form-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+}
+
+.form-actions button {
+    flex: 1;
+}
+
+#btn-processed, #btn-resolved, #btn-unresolved {
+    display: none;
+}
