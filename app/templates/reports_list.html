@@ -4,116 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/incident.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/reports_list.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <div class="header">
-        <div class="header-content">
-            <div class="gov-logo">
-                <div class="logo-icon">🏛️</div>
-                <div class="gov-title">S.I.G.A.L.A</div>
+    {% include 'header.html' %}
+
+    <div class="page-title">
+        <h1>Incident Reports List</h1>
+        <p>View all urgent and common incident reports submitted by users.</p>
+    </div>
+
+    <div class="container">
+        <div class="main-panels" style="display: grid; gap: 32px;">
+            <!-- Upper Panel: Urgent Incidents -->
+            <div class="panel urgent-panel" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 32px 24px;">
+                <h2 style="color: #dc2626; margin-bottom: 18px;">Urgent Incidents</h2>
+                {% if urgent_reports %}
+                    <div style="overflow-x:auto;">
+                        <table class="incident-table">
+                            <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                    <th>Details</th>
+                                    <th>Image</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for report in urgent_reports %}
+                                <tr>
+                                    <td>{{ report['unique_report_id'] }}</td>
+                                    <td>{{ report['report_status'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Location: {{ report['location']|replace('`', '\\`') }}`)">
+                                            {{ report['location'][:15] }}{% if report['location']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>{{ report['incident_date'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`{{ report['details']|replace('`', '\\`') }}`)">
+                                            {{ report['details'][:15] }}{% if report['details']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if report['image_path'] %}
+                                            <img src="{{ url_for('static', filename=report['image_path']) }}" alt="Incident Image" width="80" style="border-radius:6px;">
+                                        {% else %}
+                                            <span style="color:#aaa;">No image</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Full Name: {{ report['full_name']|replace('`', '\\`') }}`)">
+                                            {{ report['full_name'][:15] }}{% if report['full_name']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Email: {{ report['email']|replace('`', '\\`') }}`)">
+                                            {{ report['email'][:15] }}{% if report['email']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Phone Number: {{ report['phone_number']|replace('`', '\\`') }}`)">
+                                            {{ report['phone_number'][:11] }}{% if report['phone_number']|length > 11 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="info-box"><p>No urgent incidents found.</p></div>
+                {% endif %}
             </div>
-            <div class="nav-menu">
-                <a href="/incident" class="nav-item">Report Incident</a>
-                <a href="/dashboard" class="nav-item">Dashboard</a>
-                <a href="/ask" class="nav-item">Legal Aid</a>
-                <a href="/appointment_scheduler" class="nav-item">Appointment</a>
-                <a href="/index" class="nav-item">Home</a>
+
+            <!-- Lower Panel: Common Incidents -->
+            <div class="panel common-panel" style="background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 32px 24px;">
+                <h2 style="color: #1e3a8a; margin-bottom: 18px;">Common Incidents</h2>
+                {% if common_reports %}
+                    <div style="overflow-x:auto;">
+                        <table class="incident-table">
+                            <thead>
+                                <tr>
+                                    <th>Report ID</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                    <th>Details</th>
+                                    <th>Image</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for report in common_reports %}
+                                <tr>
+                                    <td>{{ report['unique_report_id'] }}</td>
+                                    <td>{{ report['report_status'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Location: {{ report['location']|replace('`', '\\`') }}`)">
+                                            {{ report['location'][:30] }}{% if report['location']|length > 30 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>{{ report['incident_date'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`{{ report['details']|replace('`', '\\`') }}`)">
+                                            {{ report['details'][:60] }}{% if report['details']|length > 60 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if report['image_path'] %}
+                                            <img src="{{ url_for('static', filename=report['image_path']) }}" alt="Incident Image" width="80" style="border-radius:6px;">
+                                        {% else %}
+                                            <span style="color:#aaa;">No image</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Full Name: {{ report['full_name']|replace('`', '\\`') }}`)">
+                                            {{ report['full_name'][:25] }}{% if report['full_name']|length > 25 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Email: {{ report['email']|replace('`', '\\`') }}`)">
+                                            {{ report['email'][:25] }}{% if report['email']|length > 25 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Phone Number: {{ report['phone_number']|replace('`', '\\`') }}`)">
+                                            {{ report['phone_number'][:15] }}{% if report['phone_number']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="info-box"><p>No common incidents found.</p></div>
+                {% endif %}
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-panels">
-        <!-- Upper Panel: Urgent Incidents -->
-        <div class="panel urgent-panel">
-            <h2>Urgent Incidents</h2>
-            {% if urgent_reports %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Report ID</th>
-                            <th>Status</th>
-                            <th>Location</th>
-                            <th>Date</th>
-                            <th>Details</th>
-                            <th>Image</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for report in urgent_reports %}
-                        <tr>
-                            <td>{{ report.unique_report_id }}</td>
-                            <td>{{ report.report_status }}</td>
-                            <td>{{ report.location }}</td>
-                            <td>{{ report.incident_date }}</td>
-                            <td>{{ report.details }}</td>
-                            <td>
-                                {% if report.image_path %}
-                                    <img src="{{ url_for('static', filename=report.image_path) }}" alt="Incident Image" width="80">
-                                {% else %}
-                                    No image
-                                {% endif %}
-                            </td>
-                            <td>{{ report.full_name }}</td>
-                            <td>{{ report.email }}</td>
-                            <td>{{ report.phone_number }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No urgent incidents found.</p>
-            {% endif %}
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeDetailsModal()">&times;</span>
+            <h3>Full Details</h3>
+            <div id="modalDetailsText"></div>
         </div>
+    </div>  
 
-        <!-- Lower Panel: Common Incidents -->
-        <div class="panel common-panel">
-            <h2>Common Incidents</h2>
-            {% if common_reports %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Report ID</th>
-                            <th>Status</th>
-                            <th>Location</th>
-                            <th>Date</th>
-                            <th>Details</th>
-                            <th>Image</th>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for report in common_reports %}
-                        <tr>
-                            <td>{{ report.unique_report_id }}</td>
-                            <td>{{ report.report_status }}</td>
-                            <td>{{ report.location }}</td>
-                            <td>{{ report.incident_date }}</td>
-                            <td>{{ report.details }}</td>
-                            <td>
-                                {% if report.image_path %}
-                                    <img src="{{ url_for('static', filename=report.image_path) }}" alt="Incident Image" width="80">
-                                {% else %}
-                                    No image
-                                {% endif %}
-                            </td>
-                            <td>{{ report.full_name }}</td>
-                            <td>{{ report.email }}</td>
-                            <td>{{ report.phone_number }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <p>No common incidents found.</p>
-            {% endif %}
-        </div>
-    </div>
+    <!-- Footer -->
+    {% include 'short-footer.html' %}
+
+
+    <script>
+    function showDetailsModal(details) {
+        document.getElementById('modalDetailsText').textContent = details;
+        document.getElementById('detailsModal').style.display = 'flex';
+    }
+    
+    function closeDetailsModal() {
+        document.getElementById('detailsModal').style.display = 'none';
+    }
+    
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('detailsModal');
+        if (event.target === modal) {
+            closeDetailsModal();
+        }
+    }
+</script>
 </body>
 </html>
