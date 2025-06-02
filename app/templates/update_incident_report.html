@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .main-flex {
+            display: flex;
+            gap: 32px;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .left-panel, .right-panel {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+            padding: 24px 28px 28px 28px;
+            min-width: 320px;
+            flex: 1;
+        }
+        .right-panel {
+            flex: 1.2;
+        }
+        .form-actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+        }
+        .form-actions button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-flex">
+        <!-- Left Panel: Search or Update Form -->
+        <div class="left-panel">
+            {% if not report %}
+                <h2>Search Incident Report</h2>
+                <form method="POST" action="/update_incident_report">
+                    <label for="report_id">Report ID</label>
+                    <input type="text" name="unique_id" id="report_id" placeholder="Input the Report ID" required>
+                    <label for="user_id">User ID</label>
+                    <input type="text" name="user_id" id="user_id" placeholder="Input your User ID" required>
+                    <button type="submit">Search</button>
+                </form>
+            {% else %}
+                <h2>Update Report Status</h2>
+                <form method="POST" action="/update_incident_report">
+                    <input type="hidden" name="incident_id" value="{{ report.incident_id }}">
+                    <input type="hidden" name="user_id" value="{{ user_id }}">
+                    <div class="form-actions">
+                        {% if user_role == "admin" %}
+                            <button type="submit" name="action" value="processed">Mark as Processed</button>
+                        {% elif user_role == "reporter" %}
+                            <button type="submit" name="action" value="resolved">Mark as Resolved</button>
+                            <button type="submit" name="action" value="unresolved">Mark as Unresolved</button>
+                        {% endif %}
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Right Panel: Report Details -->
+        <div class="right-panel">
+            {% if report %}
+                <h2>Incident Report Details</h2>
+                <ul>
+                    <li><strong>ID:</strong> {{ report.incident_id }}</li>
+                    <li><strong>Type:</strong> {{ report.incident_type }}</li>
+                    <li><strong>Description:</strong> {{ report.description }}</li>
+                    <li><strong>Location:</strong> {{ report.location }}</li>
+                    <li><strong>Date/Time:</strong> {{ report.date_time }}</li>
+                    <li><strong>Status:</strong> {{ report.status }}</li>
+                </ul>
+            {% else %}
+                <h2>No Incident Selected</h2>
+                <p>Please search for an incident report.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

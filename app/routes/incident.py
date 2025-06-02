@@ -2,17 +2,45 @@ from app import app
 import os
 from werkzeug.utils import secure_filename
 from flask import render_template, request
-
 from ..services import db, cursor
+import random
+from datetime import datetime
 
+# Function to generate a unique number for incident reports
+def generate_report_id():
+    year = str(datetime.today().year)[2:]
+    digits = str(random.randint(100000, 999999))
+    return f"R{year}{digits}"
+
+# Function to generate a user ID based on full name and email
+def generate_user_id(full_name, email):
+    # Simple hash for demo; replace with real user auth in production
+    return f"U{abs(hash(full_name + email)) % 1000000}"
+
+# Function to map incident type string to ID
+def map_incident_type_to_id(incident_type_str):
+    mapping = {
+        "accident": 1,
+        "emergency & disaster": 2,
+        "peace & order": 3,
+        "health & social services": 4,
+        "infrastructure & utilities": 5,
+        "public behavior & community concern": 6,
+        "governance & transparency": 7
+    }
+    if incident_type_str:
+        return mapping.get(incident_type_str.strip().lower())
+    return None
+
+# This file defines the route for submitting incident reports in a barangay system
 @app.route('/incident', methods=["POST", "GET"])
 def incident_page():
-    print("Form Submitted!")
-    if request.method == "POST":
-        print("Form submitted!")
-        form = request.form
+    report_info = None
 
-        incident_type = form.get("incidentType")
+    if request.method == "POST":
+        form = request.form 
+        incident_type_str = form.get("incidentType")
+        incident_type = map_incident_type_to_id(incident_type_str)
         description = form.get("description")
         location = form.get("location")
         incident_date = form.get("incidentDate")
@@ -20,29 +48,30 @@ def incident_page():
         email = form.get("email")
         contact_number = form.get("contactPhone")
 
+        # Generate IDs and status
+        report_id = generate_report_id()
+        user_id = generate_user_id(full_name, email)
+        status = "Pending"
+
+        # Validate required fields
+        if incident_type is None:
+            print(f"Invalid incident type: {incident_type_str}")
+            return render_template('incident-page.html', title='Submit a Complaint', report_info=None)
+          
+        # Validate if there are images submitted
         images = request.files.getlist('images')
         if not images:
             print("There are no images")
 
-        incident_types = {
-            "accident": 1,
-            "emergency": 2,
-            "peace": 3,
-            "social": 4,
-            "infra": 5,
-            "behaviour": 6,
-            "governance": 7
-        }
-
-        incident_type = incident_types.get(incident_type)
-
         try:
             query = '''
-                    INSERT INTO incident_reports (full_name, email, phone_number, details, incident_type, incident_date, location)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                    '''
-            values = (full_name, email, contact_number, description, incident_type, incident_date, location)
+                INSERT INTO incident_reports (report_id, user_id, full_name, email, phone_number, details, incident_type, incident_date, location, report_status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            '''
+            values = (report_id, user_id, full_name, email, contact_number, description, incident_type, incident_date, location, status)
+            print("Attempting to insert:", values)
             cursor.execute(query, values)
+            
             report_id = cursor.lastrowid
 
             for image in images:
@@ -58,15 +87,18 @@ def incident_page():
                     cursor.execute("INSERT INTO incident_images (report_id, image_path) VALUES (%s, %s)", (report_id, relative_path))
 
             db.commit()
-
+            print("Insert committed")
             print("Incident Report Successfully Filed")
+
+            # Pass info to template for display
+            report_info = {
+                "report_id": report_id,
+                "user_id": user_id,
+                "status": status
+            }
         except Exception as e:
             print(f"Error: {e}")
 
-    try:
-        return render_template('incident-page.html', title='Submit a Complaint')
-    except Exception as e:
-        app.logger.error(f"Error: {str(e)}")
-        raise
+    return render_template('incident-page.html', title='Submit a Complaint', report_info=report_info)
 
 
