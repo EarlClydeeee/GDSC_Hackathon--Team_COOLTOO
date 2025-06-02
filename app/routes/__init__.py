@@ -4,3 +4,4 @@ from .index import *
 from .ai_chatbot import *
 from .incident import *  
 from .appointment_scheduler import *
+from .dashboard import *
