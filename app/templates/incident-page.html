@@ -57,6 +57,7 @@
                 {% endif %}
 
                 <form id="complaintForm" method="POST" action="/incident">
+
                     <div class="form-group">
                         <label class="form-label" for="incidentType">Incident Type <span class="required">*</span></label>
                         <select class="form-select" id="incidentType" required name="incidentType">
@@ -109,7 +110,7 @@
                             <i class="fas fa-paper-plane"></i> Submit Complaint
                         </button>
                     </div>
-                </form>
+                
             </div>
             
             <div class="image-upload-section">
@@ -131,10 +132,12 @@
                     id="imageInput" 
                     class="file-input" 
                     multiple 
-                    accept="image/*,.pdf,.doc,.docx"
-                    onchange="handleFileUpload(event)">
+                    accept="image/*"
+                    onchange="handleFileUpload(event)"
+                    name="images">
                 
                 <div id="uploadedImages" class="uploaded-images"></div>
+                </form>
             </div>
         </div>
     </div>

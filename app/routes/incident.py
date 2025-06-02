@@ -1,4 +1,6 @@
 from app import app
+import os
+from werkzeug.utils import secure_filename
 from flask import render_template, request
 from ..services import db, cursor
 import random
@@ -55,6 +57,11 @@ def incident_page():
         if incident_type is None:
             print(f"Invalid incident type: {incident_type_str}")
             return render_template('incident-page.html', title='Submit a Complaint', report_info=None)
+          
+        # Validate if there are images submitted
+        images = request.files.getlist('images')
+        if not images:
+            print("There are no images")
 
         try:
             query = '''
@@ -64,6 +71,21 @@ def incident_page():
             values = (report_id, user_id, full_name, email, contact_number, description, incident_type, incident_date, location, status)
             print("Attempting to insert:", values)
             cursor.execute(query, values)
+            
+            report_id = cursor.lastrowid
+
+            for image in images:
+                print("uploading image....")
+                if image.filename:
+                    filename = secure_filename(image.filename)
+                    upload_dir = os.path.join(os.getcwd(), 'app', 'uploads')
+                    app.config['UPLOAD_FOLDER'] = upload_dir
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    image.save(filepath)
+
+                    relative_path = os.path.join('uploads', filename)
+                    cursor.execute("INSERT INTO incident_images (report_id, image_path) VALUES (%s, %s)", (report_id, relative_path))
+
             db.commit()
             print("Insert committed")
             print("Incident Report Successfully Filed")
