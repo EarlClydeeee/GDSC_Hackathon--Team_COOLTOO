@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.I.G.A.L.A Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Leaflet.js for map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/dashboard.css') }}">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="/" class="flex items-center text-blue-600 font-bold text-xl">
+                        S.I.G.A.L.A
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-500">Welcome, Admin</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% if error %}
+    <!-- Error Alert -->
+    <div class="max-w-7xl mx-auto px-4 py-3 mt-4">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Error Loading Dashboard</h3>
+                    <p class="mt-2 text-sm text-red-700">{{ error }}</p>
+                    <p class="mt-2 text-sm text-red-700">Please try refreshing the page. If the problem persists, contact support.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="hidden">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center">
+            <div class="bg-white p-6 rounded-lg shadow-xl">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                <p class="mt-4 text-gray-600">Loading dashboard data...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Filters -->
+        <div class="mb-6 bg-white rounded-lg shadow p-4">
+            <div class="flex flex-wrap gap-4 items-center">
+                <select id="incident-type" class="filter-dropdown">
+                    <option value="all">All Types</option>
+                    <option value="emergency">Emergency</option>
+                    <option value="accident">Accident</option>
+                    <option value="health">Health</option>
+                    <option value="community">Community</option>
+                    <option value="governance">Governance</option>
+                </select>
+                <select id="date-range" class="filter-dropdown">
+                    <option value="24h">Last 24 Hours</option>
+                    <option value="7d" selected>Last 7 Days</option>
+                    <option value="30d">Last 30 Days</option>
+                </select>
+                <select id="priority" class="filter-dropdown">
+                    <option value="all">All Priorities</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+                <button id="export-button" class="export-button">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Export Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Overview Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 rounded-md p-3 bg-blue-100">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-5">
+                        <div class="text-sm font-medium text-gray-500">Active Cases</div>
+                        <div id="active-cases" class="text-2xl font-semibold text-gray-900">{{ active_cases if active_cases is defined else '-' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 rounded-md p-3 bg-green-100">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-5">
+                        <div class="text-sm font-medium text-gray-500">Today's Appointments</div>
+                        <div id="todays-appointments" class="text-2xl font-semibold text-gray-900">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 rounded-md p-3 bg-yellow-100">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-5">
+                        <div class="text-sm font-medium text-gray-500">Emergency Reports</div>
+                        <div id="emergency-reports" class="text-2xl font-semibold text-gray-900">{{ emergency_reports if emergency_reports is defined else '-' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 rounded-md p-3 bg-purple-100">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-5">
+                        <div class="text-sm font-medium text-gray-500">AI Interactions</div>
+                        <div id="ai-interactions" class="text-2xl font-semibold text-gray-900">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Incident Map -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">Incident Map</h2>
+                    <div id="incident-map" class="mt-4 dashboard-map"></div>
+                </div>
+            </div>
+
+            <!-- Recent Incidents -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">Recent Incidents</h2>
+                    <div class="mt-4">
+                        <div class="flow-root">
+                            <ul id="recent-incidents-list" class="-my-5 divide-y divide-gray-200">
+                                <!-- Incidents will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Priority Distribution -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">Priority Distribution</h2>
+                    <div class="mt-4 chart-container">
+                        <canvas id="priority-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trend Analysis -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">Incident Trends</h2>
+                    <div class="mt-4 chart-container">
+                        <canvas id="trend-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
+</body>
+</html>
