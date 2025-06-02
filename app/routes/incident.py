@@ -49,7 +49,7 @@ def incident_page():
         contact_number = form.get("contactPhone")
 
         # Generate IDs and status
-        report_id = generate_report_id()
+        unique_report_id = generate_report_id()
         user_id = generate_user_id(full_name, email)
         status = "Pending"
 
@@ -65,14 +65,14 @@ def incident_page():
 
         try:
             query = '''
-                INSERT INTO incident_reports (report_id, user_id, full_name, email, phone_number, details, incident_type, incident_date, location, report_status)
+                INSERT INTO incident_reports (unique_report_id, user_id, full_name, email, phone_number, details, incident_type, incident_date, location, report_status)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             '''
-            values = (report_id, user_id, full_name, email, contact_number, description, incident_type, incident_date, location, status)
+            values = (unique_report_id, user_id, full_name, email, contact_number, description, incident_type, incident_date, location, status)
             print("Attempting to insert:", values)
             cursor.execute(query, values)
             
-            report_id = cursor.lastrowid
+            report_index = cursor.lastrowid  # This is the auto-increment primary key
 
             for image in images:
                 print("uploading image....")
@@ -84,7 +84,7 @@ def incident_page():
                     image.save(filepath)
 
                     relative_path = os.path.join('uploads', filename)
-                    cursor.execute("INSERT INTO incident_images (report_id, image_path) VALUES (%s, %s)", (report_id, relative_path))
+                    cursor.execute("INSERT INTO incident_images (report_id, image_path) VALUES (%s, %s)", (report_index, relative_path))
 
             db.commit()
             print("Insert committed")
@@ -92,7 +92,7 @@ def incident_page():
 
             # Pass info to template for display
             report_info = {
-                "report_id": report_id,
+                "unique_report_id": unique_report_id,
                 "user_id": user_id,
                 "status": status
             }
