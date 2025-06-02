@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="header">
+        <div class="header-content">
+            <div class="gov-logo">
+                <div class="logo-icon">🏛️</div>
+                <div class="gov-title">S.I.G.A.L.A</div>
+            </div>
+            <div class="nav-menu">
+                <a href="/incident" class="nav-item">Report Incident</a>
+                <a href="/dashboard" class="nav-item">Dashboard</a>
+                <a href="/ask" class="nav-item">Legal Aid</a>
+                <a href="/appointment_scheduler" class="nav-item">Appointment</a>
+                <a href="/index" class="nav-item">Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-panels">
+        <!-- Upper Panel: Urgent Incidents -->
+        <div class="panel urgent-panel">
+            <h2>Urgent Incidents</h2>
+            {% if urgent_reports %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Status</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Details</th>
+                            <th>Image</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for report in urgent_reports %}
+                        <tr>
+                            <td>{{ report.unique_report_id }}</td>
+                            <td>{{ report.report_status }}</td>
+                            <td>{{ report.location }}</td>
+                            <td>{{ report.incident_date }}</td>
+                            <td>{{ report.details }}</td>
+                            <td>
+                                {% if report.image_path %}
+                                    <img src="{{ url_for('static', filename=report.image_path) }}" alt="Incident Image" width="80">
+                                {% else %}
+                                    No image
+                                {% endif %}
+                            </td>
+                            <td>{{ report.full_name }}</td>
+                            <td>{{ report.email }}</td>
+                            <td>{{ report.phone_number }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No urgent incidents found.</p>
+            {% endif %}
+        </div>
+
+        <!-- Lower Panel: Common Incidents -->
+        <div class="panel common-panel">
+            <h2>Common Incidents</h2>
+            {% if common_reports %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Report ID</th>
+                            <th>Status</th>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Details</th>
+                            <th>Image</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for report in common_reports %}
+                        <tr>
+                            <td>{{ report.unique_report_id }}</td>
+                            <td>{{ report.report_status }}</td>
+                            <td>{{ report.location }}</td>
+                            <td>{{ report.incident_date }}</td>
+                            <td>{{ report.details }}</td>
+                            <td>
+                                {% if report.image_path %}
+                                    <img src="{{ url_for('static', filename=report.image_path) }}" alt="Incident Image" width="80">
+                                {% else %}
+                                    No image
+                                {% endif %}
+                            </td>
+                            <td>{{ report.full_name }}</td>
+                            <td>{{ report.email }}</td>
+                            <td>{{ report.phone_number }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No common incidents found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

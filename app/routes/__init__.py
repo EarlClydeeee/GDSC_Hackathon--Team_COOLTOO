@@ -7,3 +7,4 @@ from .incident import *
 from .appointment_scheduler import *
 from .update_incident_report import *
 from .dashboard import *
+from .reports_list import *
