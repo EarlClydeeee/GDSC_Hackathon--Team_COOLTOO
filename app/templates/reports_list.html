@@ -45,9 +45,17 @@
                                 <tr>
                                     <td>{{ report['unique_report_id'] }}</td>
                                     <td>{{ report['report_status'] }}</td>
-                                    <td>{{ report['location'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Location: {{ report['location']|replace('`', '\\`') }}`)">
+                                            {{ report['location'][:15] }}{% if report['location']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
                                     <td>{{ report['incident_date'] }}</td>
-                                    <td>{{ report['details'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`{{ report['details']|replace('`', '\\`') }}`)">
+                                            {{ report['details'][:15] }}{% if report['details']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
                                     <td>
                                         {% if report['image_path'] %}
                                             <img src="{{ url_for('static', filename=report['image_path']) }}" alt="Incident Image" width="80" style="border-radius:6px;">
@@ -55,9 +63,21 @@
                                             <span style="color:#aaa;">No image</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ report['full_name'] }}</td>
-                                    <td>{{ report['email'] }}</td>
-                                    <td>{{ report['phone_number'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Full Name: {{ report['full_name']|replace('`', '\\`') }}`)">
+                                            {{ report['full_name'][:15] }}{% if report['full_name']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Email: {{ report['email']|replace('`', '\\`') }}`)">
+                                            {{ report['email'][:15] }}{% if report['email']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Phone Number: {{ report['phone_number']|replace('`', '\\`') }}`)">
+                                            {{ report['phone_number'][:11] }}{% if report['phone_number']|length > 11 %}...{% endif %}
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -92,9 +112,17 @@
                                 <tr>
                                     <td>{{ report['unique_report_id'] }}</td>
                                     <td>{{ report['report_status'] }}</td>
-                                    <td>{{ report['location'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Location: {{ report['location']|replace('`', '\\`') }}`)">
+                                            {{ report['location'][:30] }}{% if report['location']|length > 30 %}...{% endif %}
+                                        </div>
+                                    </td>
                                     <td>{{ report['incident_date'] }}</td>
-                                    <td>{{ report['details'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`{{ report['details']|replace('`', '\\`') }}`)">
+                                            {{ report['details'][:60] }}{% if report['details']|length > 60 %}...{% endif %}
+                                        </div>
+                                    </td>
                                     <td>
                                         {% if report['image_path'] %}
                                             <img src="{{ url_for('static', filename=report['image_path']) }}" alt="Incident Image" width="80" style="border-radius:6px;">
@@ -102,9 +130,21 @@
                                             <span style="color:#aaa;">No image</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ report['full_name'] }}</td>
-                                    <td>{{ report['email'] }}</td>
-                                    <td>{{ report['phone_number'] }}</td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Full Name: {{ report['full_name']|replace('`', '\\`') }}`)">
+                                            {{ report['full_name'][:25] }}{% if report['full_name']|length > 25 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Email: {{ report['email']|replace('`', '\\`') }}`)">
+                                            {{ report['email'][:25] }}{% if report['email']|length > 25 %}...{% endif %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clickable-text" onclick="showDetailsModal(`Phone Number: {{ report['phone_number']|replace('`', '\\`') }}`)">
+                                            {{ report['phone_number'][:15] }}{% if report['phone_number']|length > 15 %}...{% endif %}
+                                        </div>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -117,6 +157,35 @@
         </div>
     </div>
 
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeDetailsModal()">&times;</span>
+            <h3>Full Details</h3>
+            <div id="modalDetailsText"></div>
+        </div>
+    </div>  
+
+    <!-- Footer -->
     {% include 'short-footer.html' %}
+
+
+    <script>
+    function showDetailsModal(details) {
+        document.getElementById('modalDetailsText').textContent = details;
+        document.getElementById('detailsModal').style.display = 'flex';
+    }
+    
+    function closeDetailsModal() {
+        document.getElementById('detailsModal').style.display = 'none';
+    }
+    
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+        const modal = document.getElementById('detailsModal');
+        if (event.target === modal) {
+            closeDetailsModal();
+        }
+    }
+</script>
 </body>
 </html>
