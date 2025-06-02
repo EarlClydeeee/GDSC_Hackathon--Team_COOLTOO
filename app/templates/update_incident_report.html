@@ -50,7 +50,10 @@
                         <label for="user_id" class="form-label">User ID</label>
                         <input type="text" name="user_id" id="user_id" class="form-input" placeholder="Input your User ID" required>
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <button type="submit" class="btn btn-primary search-btn">
+                                <span class="search-icon"></span>
+                                Search
+                            </button>
                         </div>
                     </form>
                 {% endif %}
@@ -90,6 +93,12 @@
                 {% else %}
                     <h2>No Incident Selected</h2>
                     <p>Please search for an incident report.</p>
+                    <div class="info-box">
+                        <p>Want to file a new incident or complaint <span style="font-style:italic;">(magreklamo)</span>?</p>
+                        <a href="/incident" class="btn btn-primary" style="margin-top:12px; display:inline-block;">
+                            File an Incident Report
+                        </a>
+                    </div>
                 {% endif %}
             </div>
         </div>
