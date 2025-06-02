@@ -90,8 +90,20 @@ uploadArea.addEventListener('drop', (e) => {
 });
 
 
-document.querySelector('.btn-primary').addEventListener('click', function() {
+document.getElementById('complaintForm').addEventListener('submit', function() {
     localStorage.removeItem('incidentDraft');
+
+    const imageInput = document.getElementById('imageInput');
+
+    // Clone the file input so we don't move the original in the DOM
+    const clonedInput = imageInput.cloneNode();
+    clonedInput.files = imageInput.files;
+
+    // Make sure it has a name attribute for Flask
+    clonedInput.name = "images";  // Flask will use request.files.getlist('images')
+    
+    // Append to the form before submission
+    this.appendChild(clonedInput);
 });
 // Save draft functionality
 document.querySelector('.btn-secondary').addEventListener('click', function() {
