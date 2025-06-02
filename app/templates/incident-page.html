@@ -46,18 +46,28 @@
                     <div class="info-box-text">Please provide accurate and complete information to help us process your complaint effectively.</div>
                 </div>
                 
+                {% if report_info %}
+                    <div class="info-box success">
+                        <h3>Incident Report Submitted!</h3>
+                        <p><strong>Report ID:</strong> {{ report_info.report_id }}</p>
+                        <p><strong>User ID:</strong> {{ report_info.user_id }}</p>
+                        <p><strong>Status:</strong> {{ report_info.status }}</p>
+                        <p>Save your Report ID and User ID to update your report status in the future.</p>
+                    </div>
+                {% endif %}
+
                 <form id="complaintForm" method="POST" action="/incident">
                     <div class="form-group">
                         <label class="form-label" for="incidentType">Incident Type <span class="required">*</span></label>
                         <select class="form-select" id="incidentType" required name="incidentType">
                             <option value="">Select Type</option>
-                            <option value="accident">Accident</option>
-                            <option value="emergency">Emergency & Disaster</option>
-                            <option value="peace">Peace & Order</option>
-                            <option value="social">Health & Social Services</option>
-                            <option value="behaviour">Public Behaviour & Community Concern</option>
-                            <option value="governance">Governance & Transparency</option>
-
+                            <option value="Accident">Accident</option>
+                            <option value="Emergency & Disaster">Emergency & Disaster</option>
+                            <option value="Peace & Order">Peace & Order</option>
+                            <option value="Health & Social Services">Health & Social Services</option>
+                            <option value="Infrastructure & Utilities">Infrastructure & Utilities</option>
+                            <option value="Public Behavior & Community Concern">Public Behavior & Community Concern</option>
+                            <option value="Governance & Transparency">Governance & Transparency</option>
                         </select>
                     </div>
                     
