@@ -22,21 +22,7 @@
 </head>
 <body class="bg-gray-100">
     <!-- Navigation Bar -->
-    <div class="header">
-        <div class="header-content">
-            <div class="gov-logo">
-                <div class="logo-icon">🏛️</div>
-                <div class="gov-title">S.I.G.A.L.A</div>
-            </div>
-            <div class="nav-menu">
-                <a href="/incident" class="nav-item">Report Incident</a>
-                <a href="/dashboard" class="nav-item" style="font-weight:bold; border-bottom:2px solid #ffffff;">Dashboard</a>
-                <a href="/legal-aid" class="nav-item">Legal Aid</a>
-                <a href="/appointment_scheduler" class="nav-item">Appointment</a>
-                <a href="/" class="nav-item">Home</a>
-            </div>
-        </div>
-    </div>
+    {% include 'header.html' %}
 
     {% if error %}
     <!-- Error Alert -->
@@ -208,14 +194,7 @@
     </main>
     `
     <!-- Footer Section -->
-    <footer class="footer">
-        <div class="footer-simple-content">
-            For inquiries or feedback, contact us at <a href="mailto:support@sigala.gov.ph" class="footer-link">support@sigala.gov.ph</a> &nbsp;|&nbsp;
-            S.I.G.A.L.A &nbsp;|&nbsp;
-            <a href="#" class="footer-link">Terms of Use</a> &nbsp;|&nbsp;
-            <a href="#" class="footer-link">Privacy Statement</a>
-        </div>
-    </footer>
+    {% include 'short-footer.html' %} 
 
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>

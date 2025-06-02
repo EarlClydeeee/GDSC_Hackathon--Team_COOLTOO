@@ -15,21 +15,7 @@
 <body>
 <body>
     <!-- Navigation Bar -->
-    <div class="header">
-        <div class="header-content">
-            <div class="gov-logo">
-                <div class="logo-icon">🏛️</div>
-                <div class="gov-title">S.I.G.A.L.A</div>
-            </div>
-            <div class="nav-menu">
-                <a href="/incident" class="nav-item" style="font-weight:bold; border-bottom:2px solid #ffffff;">Report Incident</a>
-                <a href="/ask" class="nav-item">Dashboard</a>
-                <a href="/ask" class="nav-item">Legal Aid</a>
-                <a href="/appointment_scheduler" class="nav-item">Appointment</a>
-                <a href="/index" class="nav-item">Home</a>
-            </div>
-        </div>
-    </div>
+    {% include 'header.html' %}
     
     <div class="container">
         <div class="page-title">
@@ -143,47 +129,8 @@
     </div>
 
     <!-- Footer Section -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>About S.I.G.A.L.A</h3>
-                <p>Smart Integrated Geo-Alert and Legal Assistance - A digital platform enhancing barangay services and citizen engagement.</p>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">Emergency Contacts</a></li>
-                    <li><a href="#">Legal Resources</a></li>
-                    <li><a href="#">FAQs</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Contact Us</h3>
-                <ul>
-                    <li>Barangay Hall Address</li>
-                    <li>Emergency: 911</li>
-                    <li>Email: support@sigala.gov.ph</li>
-                    <li>Office Hours: 8:00 AM - 5:00 PM</li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h3>Connect With Us</h3>
-                <div class="social-links">
-                    <a href="#" class="social-link">Facebook</a>
-                    <a href="#" class="social-link">Twitter</a>
-                    <a href="#" class="social-link">Instagram</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 S.I.G.A.L.A - All rights reserved </p>
-        </div>
-    </footer>
-    
+    {% include 'footer.html' %}
+
     <!-- JavaScript -->
     <script src="{{ url_for('static', filename='scripts/incident.js') }}"></script>
 
