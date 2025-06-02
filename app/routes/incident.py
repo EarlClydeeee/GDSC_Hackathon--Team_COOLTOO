@@ -7,6 +7,7 @@ from ..services import db, cursor
 
 @app.route('/incident', methods=["POST", "GET"])
 def incident_page():
+    print("Form Submitted!")
     if request.method == "POST":
         print("Form submitted!")
         form = request.form
@@ -52,7 +53,9 @@ def incident_page():
                     app.config['UPLOAD_FOLDER'] = upload_dir
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                     image.save(filepath)
-                    cursor.execute("INSERT INTO incident_images (report_id, image_path) VALUES (%s, %s)", (report_id, filepath))
+
+                    relative_path = os.path.join('uploads', filename)
+                    cursor.execute("INSERT INTO incident_images (report_id, image_path) VALUES (%s, %s)", (report_id, relative_path))
 
             db.commit()
 
