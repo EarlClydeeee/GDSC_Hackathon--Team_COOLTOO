@@ -2,7 +2,7 @@ from app import app
 import os
 from werkzeug.utils import secure_filename
 from flask import render_template, request
-from ..services import db, cursor
+from ..services import connect_to_db
 import random
 from datetime import datetime
 from .ai_filter import ai_filter
@@ -36,6 +36,7 @@ def map_incident_type_to_id(incident_type_str):
 # This file defines the route for submitting incident reports in a barangay system
 @app.route('/incident', methods=["POST", "GET"])
 def incident_page():
+    db, cursor = connect_to_db()
     report_info = None
 
     if request.method == "POST":
@@ -101,6 +102,8 @@ def incident_page():
         except Exception as e:
             print(f"Error: {e}")
 
+    cursor.close()
+    db.close()
     return render_template('incident-page.html', title='Submit a Complaint', report_info=report_info)
 
 

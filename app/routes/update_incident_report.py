@@ -1,6 +1,6 @@
 from app import app 
 from flask import request, render_template
-from app.services import db, cursor
+from app.services import connect_to_db
 from datetime import datetime
 import random
 import os
@@ -17,6 +17,7 @@ ADMIN_USER_ID = os.getenv("ADMIN_ID")
 @app.route('/update_incident', methods=["GET", "POST"])
 @app.route('/update_incident_report', methods=["GET", "POST"])
 def update_incident_report():
+    db, cursor = connect_to_db()
     report = None
     user_role = None
     user_id = None
@@ -128,6 +129,8 @@ def update_incident_report():
             except Exception as e:
                 return f"Error updating incident report: {e}"
 
+    cursor.close()
+    db.close()
     return render_template(
         'update_incident_report.html',
         title="Update Incident Report",

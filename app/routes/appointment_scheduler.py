@@ -4,7 +4,7 @@ import random
 from app import app
 import calendar
 
-from ..services import db, cursor
+from ..services import connect_to_db
 
 def month_calendar(year, month):
     cal = calendar.Calendar(calendar.SUNDAY)
@@ -22,6 +22,8 @@ def calendar_view():
     year = request.args.get("year", default=today.year, type=int)
     month = request.args.get("month", default=today.month, type=int)
     appt_date = date(year, month, today.day) 
+
+    db, cursor = connect_to_db()
 
     # Handle POST actions
     if request.method == "POST":
@@ -112,6 +114,8 @@ def calendar_view():
             except Exception as e:
                 print("Error occurred during delete:", e)
 
+        cursor.close()
+        db.close()
         # Redirect or render a message
         return render_template("appointment_scheduler.html", message="Appointment action processed.")
 
@@ -124,6 +128,8 @@ def calendar_view():
     month_days = month_calendar(year, month)
     month_name = calendar.month_name[month]
 
+    cursor.close()
+    db.close()
     return render_template(
         "appointment_scheduler.html",
         month_days=month_days,

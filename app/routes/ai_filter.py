@@ -1,12 +1,13 @@
 import os
 import google.generativeai as genai
-from app.services import db, cursor
+from app.services import connect_to_db
 from datetime import date
 
 AI_FILTER_MAX_CALLS = 500  # Daily limit
 
 # Get the current usage count, and reset if it's a new day
 def get_ai_filter_usage():
+    db, cursor = connect_to_db()
     cursor.execute("SELECT usage_count, last_reset FROM ai_filter_usage LIMIT 1")
     row = cursor.fetchone()
     if not row:
@@ -20,12 +21,18 @@ def get_ai_filter_usage():
         cursor.execute("UPDATE ai_filter_usage SET usage_count = 0, last_reset = %s", (date.today(),))
         db.commit()
         return 0
+    cursor.close()
+    db.close()
     return usage_count
 
 # Increment the AI filter usage count
 def increment_ai_filter_usage():
+    db, cursor = connect_to_db()
     cursor.execute("UPDATE ai_filter_usage SET usage_count = usage_count + 1")
     db.commit()
+
+    cursor.close()
+    db.close()
 
 
 # AI filter function to classify incident descriptions

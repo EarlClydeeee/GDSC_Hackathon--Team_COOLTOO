@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, jsonify, request, send_file, abort
-from ..services.sql_connection import db, cursor
+from ..services.sql_connection import connect_to_db
 from datetime import datetime, date, timedelta
 import csv
 import io
@@ -13,6 +13,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 @app.route('/dashboard')
 def dashboard():
+    db, cursor = connect_to_db()
     try:
         # Fetch active cases
         cursor.execute("""
@@ -33,6 +34,9 @@ def dashboard():
         row = cursor.fetchone()
         emergency_reports = row[0] if row else 0
 
+        cursor.close()
+        db.close()
+
         return render_template('dashboard.html',
             active_cases=active_cases,
             emergency_reports=emergency_reports
@@ -44,6 +48,7 @@ def dashboard():
 @app.route('/api/dashboard/incidents')
 @cache.cached(timeout=300)  # Cache for 5 minutes
 def get_incidents():
+    db, cursor = connect_to_db()
     try:
         # Get filter parameters
         incident_type = request.args.get('type', 'all')
@@ -93,6 +98,8 @@ def get_incidents():
         # Fetch analytics data
         analytics = get_analytics_data(incident_type, date_range, priority)
 
+        cursor.close()
+        db.close()
         return jsonify({
             'incidents': incidents,
             'analytics': analytics
@@ -104,6 +111,7 @@ def get_incidents():
 
 @app.route('/api/dashboard/export')
 def export_data():
+    db, cursor = connect_to_db()
     try:
         # Get filter parameters
         incident_type = request.args.get('type', 'all')
@@ -159,6 +167,8 @@ def export_data():
                 incident.get('assigned_to', '')
             ])
 
+        cursor.close()
+        db.close()
         # Prepare response
         output.seek(0)
         return send_file(
@@ -174,6 +184,7 @@ def export_data():
 
 def get_analytics_data(incident_type='all', date_range='7d', priority='all'):
     """Helper function to get analytics data"""
+    db, cursor = connect_to_db()
     try:
         # Priority distribution
         priority_query = """
@@ -221,6 +232,8 @@ def get_analytics_data(incident_type='all', date_range='7d', priority='all'):
                 data['date'] = data['date'].strftime('%Y-%m-%d')
             trend_data.append(data)
 
+        cursor.close()
+        db.close()
         return {
             'priorityDistribution': [d['count'] for d in priority_data],
             'trendLabels': [d['date'] for d in trend_data],
@@ -234,3 +247,48 @@ def get_analytics_data(incident_type='all', date_range='7d', priority='all'):
             'trendLabels': [],
             'trendData': []
         }
+
+
+@app.route('/api/dashboard/status-summary')
+def get_status_summary():
+    db, cursor = connect_to_db()
+    try:
+        query = """
+            SELECT status, COUNT(*) as count
+            FROM incidents
+            GROUP BY status
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        summary = [{'status': row[0], 'count': row[1]} for row in rows]
+
+        cursor.close()
+        db.close()
+        return jsonify(summary)
+
+    except Exception as e:
+        app.logger.error(f"Status Summary Error: {str(e)}")
+        return jsonify({'error': 'Failed to fetch status summary'}), 500
+    
+@app.route('/api/dashboard/type-summary')
+def get_type_summary():
+    db, cursor = connect_to_db()
+    try:
+        query = """
+            SELECT incident_type, COUNT(*) as count
+            FROM incidents
+            GROUP BY incident_type
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        summary = [{'type': row[0], 'count': row[1]} for row in rows]
+
+        cursor.close()
+        db.close()
+        return jsonify(summary)
+
+    except Exception as e:
+        app.logger.error(f"Type Summary Error: {str(e)}")
+        return jsonify({'error': 'Failed to fetch type summary'}), 500

@@ -1,2 +1,2 @@
 
-from .sql_connection import db, cursor
+from .sql_connection import connect_to_db
