@@ -5,11 +5,24 @@
             <div class="gov-title">S.I.G.A.L.A</div>
         </div>
         <div class="nav-menu">
-            <a href="/incident" class="nav-item">Report Incident</a>
+            <a href="/incident" class="nav-item">Report an Incident</a>
+            <a href="/update_incident" class="nav-item">Update Report Status</a>
             <a href="/dashboard" class="nav-item">Dashboard</a>
-            <a href="/ask" class="nav-item">Legal Aid</a>
-            <a href="/appointment_scheduler" class="nav-item">Appointment</a>
+            <a href="/reports_list" class="nav-item">Incident Reports</a>
             <a href="/index" class="nav-item">Home</a>
+            <div class="dropdown">
+                <button class="nav-item dropdown-btn menu-icon" aria-label="Menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="1"></circle>
+                        <circle cx="19" cy="12" r="1"></circle>
+                        <circle cx="5" cy="12" r="1"></circle>
+                    </svg>
+                </button>
+                <div class="dropdown-content">
+                    <a href="/ask" class="dropdown-item">Barangay AI Assistant</a>
+                    <a href="/appointment_scheduler" class="dropdown-item">Appointment Scheduler</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
