@@ -1,9 +1,18 @@
+<!--
+    Appointment Scheduler Page
+    - Displays a calendar for selecting dates
+    - Allows users to create, edit, and delete appointments
+    - Shows a form for appointment details and actions
+-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ month_name }} {{ year }} - Scheduler App</title>
-    
+
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/appointment_scheduler.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/global.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +32,7 @@
         </div>
 
         <div class="main-flex">
-            <!-- Calendar Section -->
+            <!-- Calendar Section: Displays the current month and navigation -->
             <div class="calendar-container">
                 <h2>{{ month_name }} {{ year }}</h2>
                 <div class="nav">
@@ -45,6 +54,7 @@
                                 {% if d == 0 %}
                                     <td class="empty"></td>
                                 {% elif d == today.day and month == today.month and year == today.year %}
+                                    <!-- Highlight today's date -->
                                     <td class="today">
                                         <form method="post" action="/appointment_scheduler" style="display:inline;">
                                             <input type="hidden" name="year" value="{{ year }}">
@@ -70,7 +80,7 @@
                 </table>
             </div>
 
-            <!-- Appointment Scheduler Section -->
+            <!-- Appointment Scheduler Section: Form for creating/editing/deleting appointments -->
             <div class="scheduler-container">
                 <h2>Appointment Scheduler</h2>
                 <form class="appointment-form" method="post" action="/appointment_scheduler" id="apptForm">
@@ -87,6 +97,7 @@
                     </div>
                     <input type="hidden" id="formAction" name="action" value="">
                     <div id="formFields" style="display:none;">
+                        <!-- Appointment Type -->
                         <label for="appt_type">Type of Appointment</label>
                         <select id="appt_type" name="appt_type" required>
                             <option value="">--Select--</option>
@@ -96,17 +107,21 @@
                             <option>Other Concerns</option>
                         </select>
 
+                        <!-- Description -->
                         <label for="description" id="descriptionLabel">Description</label>
                         <textarea id="description" name="description" rows="2"></textarea>
 
+                        <!-- Affiliation -->
                         <label for="affiliation">Affiliation (for Partnership)</label>
                         <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO">
 
+                        <!-- Appointment Number (for Edit/Delete) -->
                         <div id="apptNumberGroup" style="display:none;">
                             <label for="appt_number">Appointment Number (for Edit/Delete)</label>
                             <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number">
                         </div>
 
+                        <!-- User Info -->
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" required>
 
@@ -116,6 +131,7 @@
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" required>
 
+                        <!-- Form Actions -->
                         <div class="form-actions">
                             <button type="button" id="confirmBtn">
                                 <i class="fas fa-check"></i> Confirm
@@ -133,6 +149,7 @@
     <!-- Footer Section -->
     {% include 'footer.html' %}
 
+    <!-- Appointment Scheduler JavaScript Logic -->
     <script src="{{ url_for('static', filename='scripts/appointment_scheduler.js') }}"></script>
 </body>
 </html>

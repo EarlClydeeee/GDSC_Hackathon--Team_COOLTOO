@@ -1,3 +1,10 @@
+<!--
+    Update Incident Report Page
+    - Allows users and admins to search for, view, and update the status of incident reports
+    - Shows role-based actions and displays report details
+-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +36,7 @@
             <!-- Left Panel: Search or Update Form -->
             <div class="left-panel">
                 {% if not report %}
+                    <!-- Search Form -->
                     <h2>Search Incident Report</h2>
                     <form method="POST" action="/update_incident_report">
                         <label for="report_id" class="form-label">Report ID</label>
@@ -45,6 +53,7 @@
                 {% endif %}
 
                 {% if report %}
+                    <!-- Update Status Form -->
                     <h2>Update Report Status</h2>
                     <form method="POST" action="/update_incident_report">
                         <input type="hidden" name="unique_report_id" value="{{ report.unique_report_id }}">
@@ -64,6 +73,7 @@
             <!-- Right Panel: Report Details -->
             <div class="right-panel">
                 {% if report %}
+                    <!-- Display Incident Report Details -->
                     <h2>Incident Report Details</h2>
                     <ul>
                         <li><strong>Report ID:</strong> {{ report.unique_report_id }}</li>
@@ -77,6 +87,7 @@
                         <li><strong>Phone:</strong> {{ report.phone_number }}</li>
                     </ul>
                 {% else %}
+                    <!-- No Report Selected Message -->
                     <h2>No Incident Selected</h2>
                     <p>Please search for an incident report.</p>
                     <div class="info-box">

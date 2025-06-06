@@ -1,3 +1,11 @@
+"""
+    This module handles the update and search functionality for incident reports.
+    It allows users to update the status of their reports, search for existing reports,
+    and view details of specific reports based on their user role (admin or reporter).
+"""
+
+
+# --- Imports and environment setup ---
 from app import app 
 from flask import request, render_template
 from app.services import connect_to_db
@@ -5,15 +13,17 @@ from datetime import datetime
 import random
 import os
 
-# Function to generate a unique number for incident reports
+
+# --- Helper: Generate a unique number for incident reports ---
 def generate_unique_number():
     year = (str(datetime.today().date()))[2:4]
     digits = str(random.randint(100000, 999999))
     return year + digits
 
-# Admin/official user ID 
+# --- Get admin/official user ID from environment ---
 ADMIN_USER_ID = os.getenv("ADMIN_ID")
 
+# --- Route: Update or search incident reports (GET: show form, POST: handle actions) ---
 @app.route('/update_incident', methods=["GET", "POST"])
 @app.route('/update_incident_report', methods=["GET", "POST"])
 def update_incident_report():
@@ -28,7 +38,7 @@ def update_incident_report():
         user_id = request.form.get("user_id")
         action = request.form.get("action")
 
-        # 1. If updating status
+        # --- 1. If updating status ---
         if action and unique_id and user_id:
             try:
                 # Fetch current status and user_id for validation
@@ -45,6 +55,7 @@ def update_incident_report():
                         (unique_id, user_id)
                     )
                 current = cursor.fetchone()
+            
                 if not current:
                     message = "Report not found."
                 else:
@@ -71,6 +82,7 @@ def update_incident_report():
                             message = "You can only update status after it has been processed by admin."
                     else:
                         message = "You are not authorized to perform this action."
+
                 # Fetch updated report for display (use same logic as above)
                 if str(user_id).strip() == str(ADMIN_USER_ID).strip():
                     cursor.execute(
@@ -83,6 +95,7 @@ def update_incident_report():
                         (unique_id, user_id)
                     )
                 result = cursor.fetchone()
+
                 if result:
                     columns = [desc[0] for desc in cursor.description]
                     report = dict(zip(columns, result))
@@ -95,7 +108,7 @@ def update_incident_report():
             except Exception as e:
                 return f"Error updating incident report: {e}"
 
-        # 2. If searching for a report
+        # --- 2. If searching for a report ---
         elif unique_id and user_id:
             try:
                 if str(user_id).strip() == str(ADMIN_USER_ID).strip():
@@ -131,6 +144,8 @@ def update_incident_report():
 
     cursor.close()
     db.close()
+
+    # --- Render the update incident report page with results and messages ---
     return render_template(
         'update_incident_report.html',
         title="Update Incident Report",

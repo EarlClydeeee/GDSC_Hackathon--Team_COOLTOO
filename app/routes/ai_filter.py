@@ -1,17 +1,26 @@
+"""
+    This module provides an AI filter to classify incident descriptions
+    as either 'urgent' or 'common' using Google Generative AI.
+"""
+
+
+# --- Imports and environment setup ---
 import os
 import google.generativeai as genai
 from app.services import connect_to_db
 from datetime import date
 
+
+# --- Configuration: Daily usage limit for the AI filter ---
 AI_FILTER_MAX_CALLS = 500  # Daily limit
 
-# Get the current usage count, and reset if it's a new day
+# --- Usage Counter: Get current usage count, reset if it's a new day ---
 def get_ai_filter_usage():
     db, cursor = connect_to_db()
     cursor.execute("SELECT usage_count, last_reset FROM ai_filter_usage LIMIT 1")
     row = cursor.fetchone()
     if not row:
-        # Initialize if not present
+        # Initialize usage counter if not present
         cursor.execute("INSERT INTO ai_filter_usage (usage_count, last_reset) VALUES (0, %s)", (date.today(),))
         db.commit()
         return 0
@@ -25,7 +34,7 @@ def get_ai_filter_usage():
     db.close()
     return usage_count
 
-# Increment the AI filter usage count
+# --- Usage Counter: Increment the AI filter usage count ---
 def increment_ai_filter_usage():
     db, cursor = connect_to_db()
     cursor.execute("UPDATE ai_filter_usage SET usage_count = usage_count + 1")
@@ -35,19 +44,25 @@ def increment_ai_filter_usage():
     db.close()
 
 
-# AI filter function to classify incident descriptions
+# --- AI Filter: Classify incident descriptions as 'urgent' or 'common' ---
 def ai_filter(description):
     usage_count = get_ai_filter_usage()
     print(f"[AI FILTER] Usage count: {usage_count}/{AI_FILTER_MAX_CALLS}")
     if usage_count >= AI_FILTER_MAX_CALLS:
         print("[AI FILTER] Usage limit reached, returning 'common'")
         return "common"
+    
+    # Get API key from environment
     api_key = os.getenv("GOOGLE_API_KEY")
     if not api_key:
         print("[AI FILTER] GOOGLE_API_KEY not set, returning 'common'")
         return "common"
+    
+    # Configure Gemini model
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel("models/gemini-1.5-flash-latest")
+
+    # Build prompt with clear instructions and examples
     prompt = (
         "You are an assistant that classifies incident reports for a local government.\n"
         "Classify the following incident description as either 'urgent' or 'common'.\n"
@@ -69,6 +84,8 @@ def ai_filter(description):
         "Label:"
     )
     print(f"[AI FILTER] Prompt sent to Gemini:\n{prompt}\n")
+
+    # Call Gemini API and handle response
     try:
         response = model.generate_content(prompt)
         increment_ai_filter_usage()

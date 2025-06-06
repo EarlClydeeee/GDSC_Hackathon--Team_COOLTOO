@@ -1,3 +1,10 @@
+<!--
+    Incident Reports List Page
+    - Displays urgent and common incident reports in separate panels
+    - Allows viewing of full details via modal
+-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +20,7 @@
 <body>
     {% include 'header.html' %}
 
+    <!-- Page Title -->
     <div class="page-title">
         <h1>Incident Reports List</h1>
         <p>View all urgent and common incident reports submitted by users.</p>
@@ -25,6 +33,7 @@
                 <h2 style="color: #dc2626; margin-bottom: 18px;">Urgent Incidents</h2>
                 {% if urgent_reports %}
                     <div style="overflow-x:auto;">
+                        <!-- Urgent Incidents Table -->
                         <table class="incident-table">
                             <thead>
                                 <tr>
@@ -42,6 +51,7 @@
                             <tbody>
                             {% for report in urgent_reports %}
                                 <tr>
+                                    <!-- Each cell uses a clickable div to show full details in a modal -->
                                     <td>{{ report['unique_report_id'] }}</td>
                                     <td>{{ report['report_status'] }}</td>
                                     <td>
@@ -83,6 +93,7 @@
                         </table>
                     </div>
                 {% else %}
+                    <!-- No urgent incidents message -->
                     <div class="info-box"><p>No urgent incidents found.</p></div>
                 {% endif %}
             </div>
@@ -92,6 +103,7 @@
                 <h2 style="color: #1e3a8a; margin-bottom: 18px;">Common Incidents</h2>
                 {% if common_reports %}
                     <div style="overflow-x:auto;">
+                        <!-- Common Incidents Table -->
                         <table class="incident-table">
                             <thead>
                                 <tr>
@@ -150,12 +162,14 @@
                         </table>
                     </div>
                 {% else %}
+                    <!-- No common incidents message -->
                     <div class="info-box"><p>No common incidents found.</p></div>
                 {% endif %}
             </div>
         </div>
     </div>
 
+    <!-- Modal for showing full details -->
     <div id="detailsModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeDetailsModal()">&times;</span>
@@ -167,7 +181,7 @@
     <!-- Footer -->
     {% include 'short-footer.html' %}
 
-
+    <!-- Modal JS logic -->
     <script>
     function showDetailsModal(details) {
         document.getElementById('modalDetailsText').textContent = details;

@@ -1,10 +1,14 @@
-# This file will be used to define the main route of the application.
+"""
+    This file contains the main route of the application.
+"""
 
 
+# --- Imports and environment setup ---
 from app import app
 from flask import render_template
 
 
+# --- Route: Home page ---
 @app.route('/')
 @app.route('/index')
 def index():

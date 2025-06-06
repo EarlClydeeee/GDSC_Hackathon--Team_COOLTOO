@@ -1,4 +1,6 @@
-# This file is for initializing the Flask application.
+"""
+    This file is for initializing the Flask application.
+"""
 
 
 from flask import Flask
