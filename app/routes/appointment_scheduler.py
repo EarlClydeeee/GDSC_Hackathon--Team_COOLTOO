@@ -1,21 +1,32 @@
+"""
+    This module contains the logic and routing for the appointment scheduler.
+    It allows users to create, edit, and delete appointments.
+    Also displays a calendar view.
+"""
+
+
+# --- Imports and environment setup ---
 from flask import Flask, render_template, request
 from datetime import datetime, date, timedelta
 import random
 from app import app
 import calendar
-
 from ..services import connect_to_db
 
+
+# --- Helper: Generate a calendar matrix for the given month ---
 def month_calendar(year, month):
     cal = calendar.Calendar(calendar.SUNDAY)
     month_days = cal.monthdayscalendar(year, month)
     return month_days
 
+# --- Helper: Generate a unique appointment number ---
 def generate_appt_number():
     year = (str(datetime.today().date()))[2:4]
     digits = str(random.randint(100000, 999999))
     return year + digits
 
+# --- Main route: Appointment scheduler page (GET: show calendar, POST: handle actions) ---
 @app.route("/appointment_scheduler", methods=["GET", "POST"])
 def calendar_view():
     today = date.today()
@@ -25,7 +36,7 @@ def calendar_view():
 
     db, cursor = connect_to_db()
 
-    # Handle POST actions
+    # --- Handle POST actions: create, edit, delete appointments ---
     if request.method == "POST":
         action = request.form.get("action")
         appt_type = request.form.get("appt_type")
@@ -36,7 +47,7 @@ def calendar_view():
         number = request.form.get("number")
         email = request.form.get("email")
 
-        # Logic to create, edit, or delete appointments
+        # --- Create appointment ---
         if action == "create":
             max_retries = 20
             attempt = 0
@@ -64,7 +75,7 @@ def calendar_view():
             else:
                 print("Failed to generate a unique appointment ID after multiple attempts.")
 
-        
+        # --- Edit appointment ---
         elif action == "edit":
             # Logic to edit an existing appointment
             try:
@@ -90,6 +101,7 @@ def calendar_view():
             except Exception as e:
                 print("Error occurred during edit:", e)
         
+        # --- Delete appointment ---
         elif action == "delete":
             # Logic to delete an existing appointment 
             try:
@@ -119,7 +131,7 @@ def calendar_view():
         # Redirect or render a message
         return render_template("appointment_scheduler.html", message="Appointment action processed.")
 
-    # Get previous and next month for navigation
+    # --- Prepare calendar navigation and data for GET requests ---
     prev_month = month - 1 or 12
     prev_year = year - 1 if month == 1 else year
     next_month = month + 1 if month < 12 else 1

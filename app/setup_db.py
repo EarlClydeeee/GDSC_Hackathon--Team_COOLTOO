@@ -1,5 +1,12 @@
+"""
+    This module is used to set up the database schema for the incident reporting application.
+    It reads the SQL schema from a file and executes it to create the necessary tables.
+"""
+
+
 from services.sql_connection import db, cursor
 import os
+
 
 def setup_database():
     try:

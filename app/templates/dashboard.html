@@ -1,3 +1,11 @@
+<!--
+    Dashboard Page
+    - Displays summary statistics, charts, and maps for incidents and appointments
+    - Allows filtering and exporting of incident data
+    - Uses Tailwind CSS, Chart.js, and Leaflet for UI and visualization
+-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +13,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - S.I.G.A.L.A</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS for utility-first styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Leaflet CSS -->
+    <!-- Leaflet CSS for maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <!-- Chart.js -->
+    <!-- Chart.js for charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <!-- Leaflet JS -->
+    <!-- Leaflet JS for maps and heatmaps -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 
@@ -32,6 +40,7 @@
         <div class="bg-red-50 border border-red-200 rounded-lg p-4">
             <div class="flex">
                 <div class="flex-shrink-0">
+                    <!-- Error Icon -->
                     <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -58,7 +67,7 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <!-- Filters -->
+        <!-- Filters for incidents -->
         <div class="mb-6 bg-white rounded-lg shadow p-4">
             <div class="flex flex-wrap gap-4 items-center">
                 <select id="incident-type" class="filter-dropdown">
@@ -82,6 +91,7 @@
                     <option value="urgent">Urgent</option>
                 </select>
                 <button id="export-button" class="export-button">
+                    <!-- Export Icon -->
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
@@ -90,11 +100,13 @@
             </div>
         </div>
 
-        <!-- Overview Stats -->
+        <!-- Overview Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <!-- Active Cases Card -->
             <div class="stat-card bg-white rounded-lg shadow p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 rounded-md p-3 bg-blue-100">
+                        <!-- Icon -->
                         <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
@@ -106,9 +118,11 @@
                 </div>
             </div>
 
+            <!-- Today's Appointments Card -->
             <div class="stat-card bg-white rounded-lg shadow p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 rounded-md p-3 bg-green-100">
+                        <!-- Icon -->
                         <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
@@ -120,9 +134,11 @@
                 </div>
             </div>
 
+            <!-- Emergency Reports Card -->
             <div class="stat-card bg-white rounded-lg shadow p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 rounded-md p-3 bg-yellow-100">
+                        <!-- Icon -->
                         <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
@@ -134,9 +150,11 @@
                 </div>
             </div>
 
+            <!-- AI Interactions Card -->
             <div class="stat-card bg-white rounded-lg shadow p-6">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 rounded-md p-3 bg-purple-100">
+                        <!-- Icon -->
                         <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path>
                         </svg>
@@ -149,7 +167,7 @@
             </div>
         </div>
 
-        <!-- Charts Grid -->
+        <!-- Charts and Maps Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <!-- Incident Map -->
             <div class="bg-white rounded-lg shadow">
@@ -159,7 +177,7 @@
                 </div>
             </div>
 
-            <!-- Recent Incidents -->
+            <!-- Recent Incidents List -->
             <div class="bg-white rounded-lg shadow">
                 <div class="p-6">
                     <h2 class="text-lg font-medium text-gray-900">Recent Incidents</h2>
@@ -218,7 +236,7 @@
     <!-- Footer Section -->
     {% include 'short-footer.html' %} 
 
-    <!-- Custom JavaScript -->
+    <!-- Custom JavaScript for dashboard interactivity-->
     <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
 </body>
 </html>

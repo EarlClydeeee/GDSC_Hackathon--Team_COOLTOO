@@ -1,3 +1,10 @@
+<!--
+    Incident Reports List Page
+    - Displays urgent and common incident reports in separate panels
+    - Allows viewing of full details via modal
+-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,6 +45,7 @@
                         <p><strong>Report ID:</strong> {{ report_info.unique_report_id }}</p>
                         <p><strong>User ID:</strong> {{ report_info.user_id }}</p>
                         <p><strong>Status:</strong> {{ report_info.status }}</p>
+                        <p style="color: rgb(235, 99, 99);">Your report will be classified by our Community AI based on its urgency. Reports identified as requiring immediate assistance will automatically alert the appropriate officials.</p>
                         <p style="color: rgb(235, 99, 99);">Save your Report ID and User ID to update your report status in the future.</p>
                     </div>
                 {% endif %}

@@ -1,3 +1,10 @@
+<!--
+    Incident Reports List Page
+    - Displays urgent and common incident reports in separate panels
+    - Allows viewing of full details via modal
+-->
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +23,9 @@
     {% include 'header.html' %}
 
     
-    <!-- Main Section -->
+    <!-- Main Section: Chatbot UI and Info -->
     <div class="container">
+        <!-- Page Title and Description -->
         <div class="page-title">
             <h1>Barangay Legal Chatbot</h1>
             <p>Get instant answers to your legal questions. Our AI assistant is trained on barangay laws and procedures.</p>
@@ -25,11 +33,13 @@
         </div>
         
         <div class="chat-container">
+            <!-- Info Box: How to Use -->
             <div class="info-box">
                 <div class="info-box-title">📋 How to Use</div>
                 <div class="info-box-text">Ask questions about barangay laws, procedures, or legal matters. Be specific for better answers.</div>
             </div>
             
+            <!-- Quick Actions: Example Questions -->
             <div class="quick-actions">
                 <div class="quick-actions-title">Quick Questions:</div>
                 <div class="quick-buttons">
@@ -40,9 +50,11 @@
                 </div>
             </div>
             
+            <!-- Chat Box: Conversation Display -->
             <div id="chat-box"></div>
             <div class="typing-indicator" id="typing-indicator"></div>
             
+            <!-- Chat Form: User Input -->
             <form id="chat-form" autocomplete="off">
                 <input type="text" id="question" placeholder="Type your legal question here..." required />
                 <button type="submit">
@@ -54,7 +66,10 @@
 
     <!-- Footer Section -->
     {% include 'short-footer.html' %}
+
+    <!-- Chatbot JavaScript Logic -->
     <script>
+        // Handles chat conversation rendering and API requests
         const chatBox = document.getElementById('chat-box');
         const chatForm = document.getElementById('chat-form');
         const questionInput = document.getElementById('question');
@@ -71,6 +86,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
+        // Handles chat form submission
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const question = questionInput.value.trim();
@@ -96,6 +112,12 @@
                 renderConversation();
             }
         });
+
+        // Handles quick question buttons
+        function askQuickQuestion(question) {
+            questionInput.value = question;
+            chatForm.dispatchEvent(new Event('submit'));
+        }
     </script>
 </body>
 </html>
