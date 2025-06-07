@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const createBtn = document.getElementById('createBtn');
     const editBtn = document.getElementById('editBtn');
     const deleteBtn = document.getElementById('deleteBtn');
-    const submitBtn = document.getElementById('submitBtn');
     const confirmBtn = document.getElementById('confirmBtn');
     const cancelBtn = document.getElementById('cancelBtn');
     const descriptionLabel = document.getElementById('descriptionLabel');
@@ -63,15 +62,14 @@ document.addEventListener("DOMContentLoaded", function () {
         showForm('delete');
     });
 
-    // When confirm is clicked, set the action and submit the form
-    confirmBtn.addEventListener('click', function () {
-        document.getElementById('formAction').value = currentAction; // Set the action
-        apptForm.submit(); // Submit the form
-    });
-
     // When cancel is clicked, hide and reset the form, and revert buttons to vertical
     cancelBtn.addEventListener('click', function () {
         hideForm();
+    });
+
+    // Set the action before submit, let browser handle validation
+    apptForm.addEventListener('submit', function (e) {
+        document.getElementById('formAction').value = currentAction;
     });
 
     // Prevent accidental form submission when pressing Enter (except in textarea)
@@ -80,25 +78,4 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
         }
     });
-});
-
-// Toggle the buttons on Appointment Scheduler section
-document.addEventListener('DOMContentLoaded', function() {
-    const actionRow = document.querySelector('.appointment-form .action-row');
-    if (!actionRow) return;
-    actionRow.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            actionRow.classList.add('horizontal');
-        });
-    });
-});
-
-// When cancel is clicked, hide and reset the form, and revert buttons to vertical
-cancelBtn.addEventListener('click', function () {
-    hideForm();
-    // Remove horizontal class to stack buttons vertically again
-    const actionRow = document.querySelector('.appointment-form .action-row');
-    if (actionRow) {
-        actionRow.classList.remove('horizontal');
-    }
 });

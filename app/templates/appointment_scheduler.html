@@ -109,16 +109,16 @@
 
                         <!-- Description -->
                         <label for="description" id="descriptionLabel">Description</label>
-                        <textarea id="description" name="description" rows="2"></textarea>
+                        <textarea id="description" name="description" rows="2" required></textarea>
 
                         <!-- Affiliation -->
                         <label for="affiliation">Affiliation (for Partnership)</label>
-                        <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO">
+                        <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO" required>
 
                         <!-- Appointment Number (for Edit/Delete) -->
                         <div id="apptNumberGroup" style="display:none;">
                             <label for="appt_number">Appointment Number (for Edit/Delete)</label>
-                            <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number">
+                            <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number" required>
                         </div>
 
                         <!-- User Info -->
@@ -133,7 +133,7 @@
 
                         <!-- Form Actions -->
                         <div class="form-actions">
-                            <button type="button" id="confirmBtn">
+                            <button type="submit" id="confirmBtn">
                                 <i class="fas fa-check"></i> Confirm
                             </button>
                             <button type="button" id="cancelBtn">
