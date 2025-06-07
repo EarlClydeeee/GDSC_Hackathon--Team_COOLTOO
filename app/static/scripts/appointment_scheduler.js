@@ -6,12 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const createBtn = document.getElementById('createBtn');
     const editBtn = document.getElementById('editBtn');
     const deleteBtn = document.getElementById('deleteBtn');
-    const confirmBtn = document.getElementById('confirmBtn');
     const cancelBtn = document.getElementById('cancelBtn');
     const descriptionLabel = document.getElementById('descriptionLabel');
     const descriptionField = document.getElementById('description');
     const actionRow = document.querySelector('.appointment-form .action-row');
-    const apptNumberInput = document.getElementById('appt_number');
 
     let currentAction = null; // Track which action is currently selected
 
@@ -50,19 +48,30 @@ document.addEventListener("DOMContentLoaded", function () {
         if (actionRow) actionRow.classList.remove('horizontal');
     }
 
+    // Show the info panel with the appointment number
+    function showCalendarPanel() {
+    const calendarPanel = document.getElementById('calendarPanel');
+    const infoPanel = document.getElementById('infoPanel');
+    if (calendarPanel) calendarPanel.style.display = '';
+    if (infoPanel) infoPanel.style.display = 'none';
+    }
+
     // Show form for create action
     createBtn.addEventListener('click', function (e) {
         e.preventDefault();
+        showCalendarPanel(); // Show calendar panel, hide any existing info panel
         showForm('create');
     });
     // Show form for edit action
     editBtn.addEventListener('click', function (e) {
         e.preventDefault();
+        showCalendarPanel(); // Show calendar panel, hide any existing info panel
         showForm('edit');
     });
     // Show form for delete action
     deleteBtn.addEventListener('click', function (e) {
         e.preventDefault();
+        showCalendarPanel(); // Show calendar panel, hide any existing info panel
         showForm('delete');
     });
 

@@ -32,9 +32,9 @@
         </div>
 
         <div class="main-flex">
-            {% if message %}
                 <!-- Success Message Section: Displays confirmation after appointment creation/editing/deletion -->
-                <div class="calendar-container">
+                <div class="calendar-container" id="infoPanel" style="display: none;">
+                    {% if message %}
                     <div class="success-message">
                         <h2>{{ message }}</h2>
                         {% if info %}
@@ -50,10 +50,11 @@
                             </ul>
                         {% endif %}
                     </div>
+                    {% endif %}
                 </div>
-            {% else %}
+
                 <!-- Calendar Section: Displays the current month and navigation -->
-                <div class="calendar-container">
+                <div class="calendar-container" id="calendarPanel" style="display: none;">
                     <h2>{{ month_name }} {{ year }}</h2>
                     <div class="nav">
                         <a href="/appointment_scheduler?year={{ prev_year }}&month={{ prev_month }}">&#8592; Previous</a>
@@ -99,7 +100,6 @@
                         </tbody>
                     </table>
                 </div>
-            {% endif %}
 
             <!-- Appointment Scheduler Section: Form for creating/editing/deleting appointments -->
             <div class="scheduler-container">
@@ -176,5 +176,18 @@
 
     <!-- Appointment Scheduler JavaScript Logic -->
     <script src="{{ url_for('static', filename='scripts/appointment_scheduler.js') }}"></script>
+    <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        var infoPanel = document.getElementById('infoPanel');
+        var calendarPanel = document.getElementById('calendarPanel');
+        {% if message %}
+            if (infoPanel) infoPanel.style.display = '';
+            if (calendarPanel) calendarPanel.style.display = 'none';
+        {% else %}
+            if (infoPanel) infoPanel.style.display = 'none';
+            if (calendarPanel) calendarPanel.style.display = '';
+        {% endif %}
+    });
+    </script>
 </body>
 </html>
