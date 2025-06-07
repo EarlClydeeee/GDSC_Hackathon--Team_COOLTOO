@@ -63,7 +63,20 @@ def calendar_view():
                     db.commit()
 
                     print(f"Appointment created successfully: {appt_id}")
-                    break  # Success, exit loop
+
+                    # Prepare info to return to the template
+                    info = {
+                        "appointment_id": appt_id,
+                        "appointment_type": appt_type,
+                        "details": description,
+                        "affiliation": affiliation,
+                        "appointment_date": appt_date,
+                        "full_name": name,
+                        "contact_number": number,
+                        "email": email
+                    }
+                    return render_template("appointment_scheduler.html", message="Appointment created successfully!", 
+                                           info=info) # Success, exit loop
 
                 except Exception as e:
                     if "Duplicate entry" in str(e).lower():
@@ -96,6 +109,21 @@ def calendar_view():
                     cursor.execute(update_query, (appt_type, description, affiliation, appt_number, name, number, email, appt_date))
                     db.commit()
                     print(f"Appointment {appt_number} updated for {name}.")
+
+                    # Prepare info to return to the template
+                    info = {
+                        "appointment_id": appt_number,
+                        "appointment_type": appt_type,
+                        "details": description,
+                        "affiliation": affiliation,
+                        "appointment_date": appt_date,
+                        "full_name": name,
+                        "contact_number": number,
+                        "email": email
+                    }
+                    return render_template("appointment_scheduler.html", message="Appointment updated successfully!", 
+                                           info=info) # Success, exit loop
+
                 else:
                     print("No matching appointment found to edit.")
             except Exception as e:
@@ -121,6 +149,16 @@ def calendar_view():
                     cursor.execute(delete_query, (appt_number, name, number, email))
                     db.commit()
                     print(f"Appointment {appt_number} deleted for {name}.")
+
+                    # Prepare info to return to the template
+                    info = {
+                        "appointment_id": appt_number,
+                        "full_name": name,
+                        "contact_number": number,
+                        "email": email
+                    }
+                    return render_template("appointment_scheduler.html", message="Appointment deleted successfully!", 
+                                           info=info) 
                 else:
                     print("No matching appointment found to delete.")
             except Exception as e:
