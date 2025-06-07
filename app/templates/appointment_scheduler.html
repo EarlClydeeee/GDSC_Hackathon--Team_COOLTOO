@@ -54,52 +54,37 @@
                 </div>
 
                 <!-- Calendar Section: Displays the current month and navigation -->
-                <div class="calendar-container" id="calendarPanel" style="display: none;">
-                    <h2>{{ month_name }} {{ year }}</h2>
-                    <div class="nav">
-                        <a href="/appointment_scheduler?year={{ prev_year }}&month={{ prev_month }}">&#8592; Previous</a>
-                        <a href="/appointment_scheduler?year={{ next_year }}&month={{ next_month }}">Next &#8594;</a>
-                    </div>
-                    <table class="calendar">
-                        <thead>
-                            <tr>
-                                {% for wd in weekdays %}
-                                <th>{{ wd }}</th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for week in month_days %}
-                            <tr>
-                                {% for d in week %}
-                                    {% if d == 0 %}
-                                        <td class="empty"></td>
-                                    {% elif d == today.day and month == today.month and year == today.year %}
-                                        <!-- Highlight today's date -->
-                                        <td class="today">
-                                            <form method="post" action="/appointment_scheduler" style="display:inline;">
-                                                <input type="hidden" name="year" value="{{ year }}">
-                                                <input type="hidden" name="month" value="{{ month }}">
-                                                <input type="hidden" name="day" value="{{ d }}">
-                                                <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
-                                            </form>
-                                        </td>
-                                    {% else %}
-                                        <td>
-                                            <form method="post" action="/appointment_scheduler" style="display:inline;">
-                                                <input type="hidden" name="year" value="{{ year }}">
-                                                <input type="hidden" name="month" value="{{ month }}">
-                                                <input type="hidden" name="day" value="{{ d }}">
-                                                <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
-                                            </form>
-                                        </td>
-                                    {% endif %}
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="calendar-container" id="calendarPanel" style="display:none;">
+                <h2>{{ month_name }} {{ year }}</h2>
+                <div class="nav">
+                    <a href="/appointment_scheduler?year={{ prev_year }}&month={{ prev_month }}">&#8592; Previous</a>
+                    <a href="/appointment_scheduler?year={{ next_year }}&month={{ next_month }}">Next &#8594;</a>
                 </div>
+                <table class="calendar">
+                    <thead>
+                        <tr>
+                            {% for wd in weekdays %}
+                            <th>{{ wd }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in month_days %}
+                        <tr>
+                            {% for d in week %}
+                                {% if d == 0 %}
+                                    <td class="empty"></td>
+                                {% elif d == today.day and month == today.month and year == today.year %}
+                                    <td class="today">{{ d }}</td>
+                                {% else %}
+                                    <td>{{ d }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
             <!-- Appointment Scheduler Section: Form for creating/editing/deleting appointments -->
             <div class="scheduler-container">
