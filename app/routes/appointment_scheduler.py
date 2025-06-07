@@ -29,15 +29,30 @@ def generate_appt_number():
 # --- Main route: Appointment scheduler page (GET: show calendar, POST: handle actions) ---
 @app.route("/appointment_scheduler", methods=["GET", "POST"])
 def calendar_view():
+    # --- Initialize variables for template context ---
+    info = None
+    message = None
     today = date.today()
+    # Get year and month from query params, default to today
     year = request.args.get("year", default=today.year, type=int)
     month = request.args.get("month", default=today.month, type=int)
-    appt_date = date(year, month, today.day) 
+    # Get appointment date from form or use today
+    appt_date = request.form.get("selected_date") or date(year, month, today.day)
 
+    # --- Prepare calendar data for the template ---
+    prev_month = month - 1 or 12
+    prev_year = year - 1 if month == 1 else year
+    next_month = month + 1 if month < 12 else 1
+    next_year = year + 1 if month == 12 else year
+    month_days = month_calendar(year, month)
+    month_name = calendar.month_name[month]
+
+    # --- Connect to the database ---
     db, cursor = connect_to_db()
 
-    # --- Handle POST actions: create, edit, delete appointments ---
+    # --- Handle POST requests (create, edit, delete) ---
     if request.method == "POST":
+        # Get form data
         action = request.form.get("action")
         appt_type = request.form.get("appt_type")
         description = request.form.get("description")
@@ -55,95 +70,125 @@ def calendar_view():
                 appt_id = generate_appt_number()
                 try:
                     query = '''
-                            INSERT INTO appointments (appointment_id, appointment_type, details, affiliation, full_name, contact_number, email, appointment_date)
-                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                            '''
+                        INSERT INTO appointments (appointment_id, appointment_type, details, affiliation, full_name, contact_number, email, appointment_date)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    '''
                     input = (appt_id, appt_type, description, affiliation, name, number, email, appt_date)
                     cursor.execute(query, input)
                     db.commit()
-
-                    print(f"Appointment created successfully: {appt_id}")
-                    break  # Success, exit loop
-
+                    # If successful, store the appointment info
+                    info = {
+                        "appointment_id": appt_id,
+                        "appointment_type": appt_type,
+                        "details": description,
+                        "affiliation": affiliation,
+                        "appointment_date": appt_date,
+                        "full_name": name,
+                        "contact_number": number,
+                        "email": email
+                    }
+                    message = "Appointment created successfully!"
+                    break
                 except Exception as e:
+                    # Retry if duplicate, else break on error
                     if "Duplicate entry" in str(e).lower():
-                        print(f"Duplicate appointment ID {appt_id}, retrying...")
                         attempt += 1
                     else:
-                        print(f"Error: {e}")
-                        break  # Break on other errors
+                        message = f"Error: {e}"
+                        break
             else:
-                print("Failed to generate a unique appointment ID after multiple attempts.")
+                message = "Failed to generate a unique appointment ID after multiple attempts."
 
         # --- Edit appointment ---
         elif action == "edit":
-            # Logic to edit an existing appointment
             try:
-                # Check if an appointment exists with the given number, name, number, and email
                 check_query = '''
                     SELECT * FROM appointments
-                    WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                    WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                 '''
                 cursor.execute(check_query, (appt_number, name, number, email))
                 result = cursor.fetchone()
                 if result:
-                    # Update the type, description, and affiliation
                     update_query = '''
                         UPDATE appointments
-                        SET appointment_type = %s, details = %s, affiliation = %s
-                        WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                        SET appointment_type = %s, details = %s, affiliation = %s, appointment_date = %s
+                        WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                     '''
-                    cursor.execute(update_query, (appt_type, description, affiliation, appt_number, name, number, email))
+                    cursor.execute(update_query, (appt_type, description, affiliation, appt_date, appt_number, name, number, email))
                     db.commit()
-                    print(f"Appointment {appt_number} updated for {name}.")
+
+                    # Store the updated appointment info
+                    info = {
+                        "appointment_id": appt_number,
+                        "appointment_type": appt_type,
+                        "details": description,
+                        "affiliation": affiliation,
+                        "appointment_date": appt_date,
+                        "full_name": name,
+                        "contact_number": number,
+                        "email": email
+                    }
+                    message = "Appointment updated successfully!"
                 else:
-                    print("No matching appointment found to edit.")
+                    message = "No matching appointment found to edit."
             except Exception as e:
-                print("Error occurred during edit:", e)
-        
+                message = f"Error occurred during edit: {e}"
+
         # --- Delete appointment ---
         elif action == "delete":
-            # Logic to delete an existing appointment 
             try:
-                # Check if an appointment exists with the given info
                 check_query = '''
                     SELECT * FROM appointments
-                    WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                    WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                 '''
                 cursor.execute(check_query, (appt_number, name, number, email))
                 result = cursor.fetchone()
                 if result:
-                    # Delete the appointment
                     delete_query = '''
                         DELETE FROM appointments
-                        WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                        WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                     '''
                     cursor.execute(delete_query, (appt_number, name, number, email))
                     db.commit()
-                    print(f"Appointment {appt_number} deleted for {name}.")
+                    # Store the deleted appointment info
+                    info = {
+                        "appointment_id": appt_number,
+                        "full_name": name,
+                        "contact_number": number,
+                        "email": email
+                    }
+                    message = "Appointment deleted successfully!"
                 else:
-                    print("No matching appointment found to delete.")
+                    message = "No matching appointment found to delete."
             except Exception as e:
-                print("Error occurred during delete:", e)
+                message = f"Error occurred during delete: {e}"
 
+        # --- Close DB and render template with all context ---
         cursor.close()
         db.close()
-        # Redirect or render a message
-        return render_template("appointment_scheduler.html", message="Appointment action processed.")
+        return render_template(
+            "appointment_scheduler.html",
+            message=message,
+            info=info,
+            month_days=month_days,
+            month=month,
+            year=year,
+            month_name=month_name,
+            today=today,
+            prev_month=prev_month,
+            prev_year=prev_year,
+            next_month=next_month,
+            next_year=next_year,
+            weekdays=list(calendar.day_abbr)
+        )
 
-    # --- Prepare calendar navigation and data for GET requests ---
-    prev_month = month - 1 or 12
-    prev_year = year - 1 if month == 1 else year
-    next_month = month + 1 if month < 12 else 1
-    next_year = year + 1 if month == 12 else year
-
-    month_days = month_calendar(year, month)
-    month_name = calendar.month_name[month]
-
+    # GET request: just show the calendar
     cursor.close()
     db.close()
     return render_template(
         "appointment_scheduler.html",
+        message=None,
+        info=None,
         month_days=month_days,
         month=month,
         year=year,

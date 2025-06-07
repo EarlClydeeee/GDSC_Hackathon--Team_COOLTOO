@@ -6,8 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const createBtn = document.getElementById('createBtn');
     const editBtn = document.getElementById('editBtn');
     const deleteBtn = document.getElementById('deleteBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const confirmBtn = document.getElementById('confirmBtn');
     const cancelBtn = document.getElementById('cancelBtn');
     const descriptionLabel = document.getElementById('descriptionLabel');
     const descriptionField = document.getElementById('description');
@@ -22,16 +20,19 @@ document.addEventListener("DOMContentLoaded", function () {
         // For create: hide appointment number, show description
         if (action === 'create') {
             apptNumberGroup.style.display = 'none';
+            document.getElementById('appt_number').removeAttribute('required');
             descriptionLabel.style.display = '';
             descriptionField.style.display = '';
         // For edit: show appointment number and description
         } else if (action === 'edit') {
             apptNumberGroup.style.display = 'block';
+            document.getElementById('appt_number').setAttribute('required', 'required');
             descriptionLabel.style.display = '';
             descriptionField.style.display = '';
         // For delete: show appointment number, hide description
         } else if (action === 'delete') {
             apptNumberGroup.style.display = 'block';
+            document.getElementById('appt_number').setAttribute('required', 'required');
             descriptionLabel.style.display = 'none';
             descriptionField.style.display = 'none';
         }
@@ -47,31 +48,41 @@ document.addEventListener("DOMContentLoaded", function () {
         if (actionRow) actionRow.classList.remove('horizontal');
     }
 
+    // Show the info panel with the appointment number
+    function showCalendarPanel() {
+    const calendarPanel = document.getElementById('calendarPanel');
+    const infoPanel = document.getElementById('infoPanel');
+    if (calendarPanel) calendarPanel.style.display = '';
+    if (infoPanel) infoPanel.style.display = 'none';
+    }
+
     // Show form for create action
     createBtn.addEventListener('click', function (e) {
         e.preventDefault();
+        showCalendarPanel(); // Show calendar panel, hide any existing info panel
         showForm('create');
     });
     // Show form for edit action
     editBtn.addEventListener('click', function (e) {
         e.preventDefault();
+        showCalendarPanel(); // Show calendar panel, hide any existing info panel
         showForm('edit');
     });
     // Show form for delete action
     deleteBtn.addEventListener('click', function (e) {
         e.preventDefault();
+        showCalendarPanel(); // Show calendar panel, hide any existing info panel
         showForm('delete');
-    });
-
-    // When confirm is clicked, set the action and submit the form
-    confirmBtn.addEventListener('click', function () {
-        document.getElementById('formAction').value = currentAction; // Set the action
-        apptForm.submit(); // Submit the form
     });
 
     // When cancel is clicked, hide and reset the form, and revert buttons to vertical
     cancelBtn.addEventListener('click', function () {
         hideForm();
+    });
+
+    // Set the action before submit, let browser handle validation
+    apptForm.addEventListener('submit', function (e) {
+        document.getElementById('formAction').value = currentAction;
     });
 
     // Prevent accidental form submission when pressing Enter (except in textarea)
@@ -80,25 +91,4 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
         }
     });
-});
-
-// Toggle the buttons on Appointment Scheduler section
-document.addEventListener('DOMContentLoaded', function() {
-    const actionRow = document.querySelector('.appointment-form .action-row');
-    if (!actionRow) return;
-    actionRow.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            actionRow.classList.add('horizontal');
-        });
-    });
-});
-
-// When cancel is clicked, hide and reset the form, and revert buttons to vertical
-cancelBtn.addEventListener('click', function () {
-    hideForm();
-    // Remove horizontal class to stack buttons vertically again
-    const actionRow = document.querySelector('.appointment-form .action-row');
-    if (actionRow) {
-        actionRow.classList.remove('horizontal');
-    }
 });

@@ -32,8 +32,29 @@
         </div>
 
         <div class="main-flex">
-            <!-- Calendar Section: Displays the current month and navigation -->
-            <div class="calendar-container">
+                <!-- Success Message Section: Displays confirmation after appointment creation/editing/deletion -->
+                <div class="calendar-container" id="infoPanel" style="display: none;">
+                    {% if message %}
+                    <div class="success-message">
+                        <h2>{{ message }}</h2>
+                        {% if info %}
+                            <ul>
+                                {% if info.appointment_id %}<li><b>Appointment ID:</b> {{ info.appointment_id }}</li>{% endif %}
+                                {% if info.appointment_type %}<li><b>Type:</b> {{ info.appointment_type }}</li>{% endif %}
+                                {% if info.details %}<li><b>Description:</b> {{ info.details }}</li>{% endif %}
+                                {% if info.affiliation %}<li><b>Affiliation:</b> {{ info.affiliation }}</li>{% endif %}
+                                {% if info.appointment_date %}<li><b>Date:</b> {{ info.appointment_date }}</li>{% endif %}
+                                {% if info.full_name %}<li><b>Name:</b> {{ info.full_name }}</li>{% endif %}
+                                {% if info.contact_number %}<li><b>Contact Number:</b> {{ info.contact_number }}</li>{% endif %}
+                                {% if info.email %}<li><b>Email:</b> {{ info.email }}</li>{% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Calendar Section: Displays the current month and navigation -->
+                <div class="calendar-container" id="calendarPanel" style="display:none;">
                 <h2>{{ month_name }} {{ year }}</h2>
                 <div class="nav">
                     <a href="/appointment_scheduler?year={{ prev_year }}&month={{ prev_month }}">&#8592; Previous</a>
@@ -54,24 +75,9 @@
                                 {% if d == 0 %}
                                     <td class="empty"></td>
                                 {% elif d == today.day and month == today.month and year == today.year %}
-                                    <!-- Highlight today's date -->
-                                    <td class="today">
-                                        <form method="post" action="/appointment_scheduler" style="display:inline;">
-                                            <input type="hidden" name="year" value="{{ year }}">
-                                            <input type="hidden" name="month" value="{{ month }}">
-                                            <input type="hidden" name="day" value="{{ d }}">
-                                            <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
-                                        </form>
-                                    </td>
+                                    <td class="today">{{ d }}</td>
                                 {% else %}
-                                    <td>
-                                        <form method="post" action="/appointment_scheduler" style="display:inline;">
-                                            <input type="hidden" name="year" value="{{ year }}">
-                                            <input type="hidden" name="month" value="{{ month }}">
-                                            <input type="hidden" name="day" value="{{ d }}">
-                                            <button type="submit" style="background:none;border:none;color:inherit;font:inherit;cursor:pointer;">{{ d }}</button>
-                                        </form>
-                                    </td>
+                                    <td>{{ d }}</td>
                                 {% endif %}
                             {% endfor %}
                         </tr>
@@ -109,16 +115,20 @@
 
                         <!-- Description -->
                         <label for="description" id="descriptionLabel">Description</label>
-                        <textarea id="description" name="description" rows="2"></textarea>
+                        <textarea id="description" name="description" rows="2" required></textarea>
 
                         <!-- Affiliation -->
                         <label for="affiliation">Affiliation (for Partnership)</label>
-                        <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO">
+                        <input type="text" id="affiliation" name="affiliation" placeholder="Organization/NGO" required>
+
+                        <!-- Appointment Date -->
+                        <label for="selectedDate">Appointment Date</label>
+                        <input type="date" id="selectedDate" name="selected_date" required>
 
                         <!-- Appointment Number (for Edit/Delete) -->
                         <div id="apptNumberGroup" style="display:none;">
                             <label for="appt_number">Appointment Number (for Edit/Delete)</label>
-                            <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number">
+                            <input type="text" id="appt_number" name="appt_number" placeholder="Appointment Number" required>
                         </div>
 
                         <!-- User Info -->
@@ -133,7 +143,7 @@
 
                         <!-- Form Actions -->
                         <div class="form-actions">
-                            <button type="button" id="confirmBtn">
+                            <button type="submit" id="confirmBtn">
                                 <i class="fas fa-check"></i> Confirm
                             </button>
                             <button type="button" id="cancelBtn">
@@ -151,5 +161,18 @@
 
     <!-- Appointment Scheduler JavaScript Logic -->
     <script src="{{ url_for('static', filename='scripts/appointment_scheduler.js') }}"></script>
+    <script>
+    window.addEventListener('DOMContentLoaded', function() {
+        var infoPanel = document.getElementById('infoPanel');
+        var calendarPanel = document.getElementById('calendarPanel');
+        {% if message %}
+            if (infoPanel) infoPanel.style.display = '';
+            if (calendarPanel) calendarPanel.style.display = 'none';
+        {% else %}
+            if (infoPanel) infoPanel.style.display = 'none';
+            if (calendarPanel) calendarPanel.style.display = '';
+        {% endif %}
+    });
+    </script>
 </body>
 </html>
