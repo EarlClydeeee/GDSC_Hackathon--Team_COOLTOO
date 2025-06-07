@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const descriptionLabel = document.getElementById('descriptionLabel');
     const descriptionField = document.getElementById('description');
     const actionRow = document.querySelector('.appointment-form .action-row');
+    const apptNumberInput = document.getElementById('appt_number');
 
     let currentAction = null; // Track which action is currently selected
 
@@ -21,16 +22,19 @@ document.addEventListener("DOMContentLoaded", function () {
         // For create: hide appointment number, show description
         if (action === 'create') {
             apptNumberGroup.style.display = 'none';
+            document.getElementById('appt_number').removeAttribute('required');
             descriptionLabel.style.display = '';
             descriptionField.style.display = '';
         // For edit: show appointment number and description
         } else if (action === 'edit') {
             apptNumberGroup.style.display = 'block';
+            document.getElementById('appt_number').setAttribute('required', 'required');
             descriptionLabel.style.display = '';
             descriptionField.style.display = '';
         // For delete: show appointment number, hide description
         } else if (action === 'delete') {
             apptNumberGroup.style.display = 'block';
+            document.getElementById('appt_number').setAttribute('required', 'required');
             descriptionLabel.style.display = 'none';
             descriptionField.style.display = 'none';
         }

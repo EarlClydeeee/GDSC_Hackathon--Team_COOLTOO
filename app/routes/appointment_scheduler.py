@@ -32,7 +32,7 @@ def calendar_view():
     today = date.today()
     year = request.args.get("year", default=today.year, type=int)
     month = request.args.get("month", default=today.month, type=int)
-    appt_date = date(year, month, today.day) 
+    appt_date = request.form.get("selected_date") or date(year, month, today.day)
 
     db, cursor = connect_to_db()
 
@@ -91,9 +91,9 @@ def calendar_view():
                     update_query = '''
                         UPDATE appointments
                         SET appointment_type = %s, details = %s, affiliation = %s
-                        WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
+                        WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s appointment_date = %s
                     '''
-                    cursor.execute(update_query, (appt_type, description, affiliation, appt_number, name, number, email))
+                    cursor.execute(update_query, (appt_type, description, affiliation, appt_number, name, number, email, appt_date))
                     db.commit()
                     print(f"Appointment {appt_number} updated for {name}.")
                 else:
