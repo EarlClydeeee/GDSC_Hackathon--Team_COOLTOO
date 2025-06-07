@@ -82,7 +82,7 @@ def calendar_view():
                 # Check if an appointment exists with the given number, name, number, and email
                 check_query = '''
                     SELECT * FROM appointments
-                    WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                    WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                 '''
                 cursor.execute(check_query, (appt_number, name, number, email))
                 result = cursor.fetchone()
@@ -91,7 +91,7 @@ def calendar_view():
                     update_query = '''
                         UPDATE appointments
                         SET appointment_type = %s, details = %s, affiliation = %s
-                        WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                        WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                     '''
                     cursor.execute(update_query, (appt_type, description, affiliation, appt_number, name, number, email))
                     db.commit()
@@ -108,7 +108,7 @@ def calendar_view():
                 # Check if an appointment exists with the given info
                 check_query = '''
                     SELECT * FROM appointments
-                    WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                    WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                 '''
                 cursor.execute(check_query, (appt_number, name, number, email))
                 result = cursor.fetchone()
@@ -116,7 +116,7 @@ def calendar_view():
                     # Delete the appointment
                     delete_query = '''
                         DELETE FROM appointments
-                        WHERE appointment_number = %s AND full_name = %s AND contact_number = %s AND email = %s
+                        WHERE appointment_id = %s AND full_name = %s AND contact_number = %s AND email = %s
                     '''
                     cursor.execute(delete_query, (appt_number, name, number, email))
                     db.commit()
