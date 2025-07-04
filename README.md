@@ -12,12 +12,14 @@ In many communities, incident reporting remains manual, fragmented, or poorly do
 S.I.G.A.L.A. provides a centralized, intelligent platform where:
 - Citizens can **report incidents** with a simple form.
 - An **AI classifier** automatically categorizes the report based on urgency.
-- Barangay officials receive **scheduled task assignments** based on urgency and type.
+– A **chatbot** that answers common questions regarding the establishment and government policies.
+– Barangay officials receive **report signals** (unfinished) based on urgency and type.
 - Data is stored in a database for future reference and transparency.
 
 ## Features
 - 📝 **Incident Reporting Form** – Simple and accessible form for citizens.
 - 🧠 **AI-Powered Classifier** – Automatically determines the incident urgency category.
+- 🗨️ **Chatbot for Legal Assistance** – Lets users enquire common questions.
 - 🗓️ **Appointment Scheduler** – Enables citizens to create an appointment before visiting barangay establishments.
 - 📊 **Database Logging** – Tracks reports and responses securely.
 - 🌐 **Web-Based Interface** – Built with Flask (Python) for ease of deployment.
@@ -27,8 +29,9 @@ S.I.G.A.L.A. provides a centralized, intelligent platform where:
 |------------------|----------------------|
 | Backend          | Python (Flask)       |
 | Frontend         | HTML, CSS, JavaScript |
-| AI Classifier    | openai wrapper |
-| Database         | SQLite |
+| AI Classifier    | gemini wrapper |
+| Chatbot for legal assistance | TogetherAI wrapper |
+| Database         | MySQL |
 | Deployment       | Local |
 
 
